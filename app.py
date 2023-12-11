@@ -16,7 +16,7 @@ def inscription():
 
 # DEBUT DE LA PAGE CONNEXION
 #ROUTE ==> LA PAGE CONNEXION
-@app.route('/Inscription')
+@app.route('/Connexion')
 def connexion():
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
@@ -64,7 +64,9 @@ def restaurant():
     return render_template("restaurant/restaurant.html")
 # FIN DE LA PAGE RESTAURANTS
 
-
+@app.route('/carrou')
+def carrou():
+    return render_template("carroussel_resto.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

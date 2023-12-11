@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+body {
+  margin: 0;
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1d1e22;
+}
+img {
+  display: block;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container-carrousel {
+  --widthItem: 150px;
+  --heightItem: 100px;
+  width: var(--widthItem);
+  height: var(--heightItem);
+  perspective: 1000px;
+}
+.carrousel {
+  --rotatey: 0;
+  font-size: 4rem;
+  position: relative;
+  transform: rotatey(var(--rotatey));
+  transform-style: preserve-3d;
+  user-select: none;
+  cursor: grab;
+}
+.carrousel-item {
+  opacity: 0.5;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  transition: opacity 0.5s;
+}
+.carrousel-item:hover {
+  opacity: 1;
+}
+.carrousel,
+.carrousel-item {
+  width: 100%;
+  height: 100%;
+}
+.carrousel-item:nth-child(1) {
+  --rotatey: 30;
+  transform: rotatey(var(--rotatey)) translatez(var(--tz));
+  background-image: url(https://picsum.photos/600/400?random=1);
+}
+.carrousel-item:nth-child(2) {
+  --rotatey: 30;
+  transform: rotatey(var(--rotatey)) translatez(var(--tz));
+  background-image: url(https://picsum.photos/600/400?random=2);
+}
+.carrousel-item:nth-child(3) {
+  --rotatey: 30;
+  transform: rotatey(var(--rotatey)) translatez(var(--tz));
+  background-image: url(https://picsum.photos/600/400?random=3);
+}
+.carrousel-item:nth-child(4) {
+  --rotatey: 30;
+  transform: rotatey(var(--rotatey)) translatez(var(--tz));
+  background-image: url(https://picsum.photos/600/400?random=4);
+}
+.carrousel-item:nth-child(5) {
+  --rotate: 30;
+  transform: rotatey(var(--rotatey)) translatez(var(--tz));
+  background-image: url(https://picsum.photos/600/400?random=5);
+}
+.carrousel-item:nth-child(6) {
+  --rotatey: 30;
+  transform: rotatey(var(--rotatey)) translatez(var(--tz));
+  background-image: url(https://picsum.photos/600/400?random=6);
+}
+@media screen and (min-width: 576px) {
+  .container-carrousel {
+  --widthItem: 250px;
+  --heightItem: 200px;
+  }
+}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="container-carrousel">
+        <div class="carrousel">
+            <div class="carrousel-item"></div>
+            <div class="carrousel-item"></div>
+            <div class="carrousel-item"></div>
+            <div class="carrousel-item"></div>
+            <div class="carrousel-item"></div>
+            <div class="carrousel-item"></div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    const container = document.querySelector(".container");
+        const containerCarrousel = container.querySelector(".container-carrousel");
+        const carrousel = container.querySelector(".carrousel");
+        const carrouselItems = carrousel.querySelectorAll(".carrousel-item");
+
+        // Iniciamos variables que cambiaran su estado.
+        let isMouseDown = false;
+        let currentMousePos = 0;
+        let lastMousePos = 0;
+        let lastMoveTo = 0;
+        let moveTo = 0;
+
+        const createCarrousel = () => {
+            const carrouselProps = onResize();
+            const length = carrouselItems.length; // Longitud del array
+            const degress = 360 / length; // Grados por cada item
+            const gap = 20; // Espacio entre cada item
+            const tz = distanceZ(carrouselProps.w, length, gap)
+
+            const fov = calculateFov(carrouselProps);
+            const height = calculateHeight(tz);
+
+            container.style.width = tz * 2 + gap * length + "px";
+            container.style.height = height + "px";
+
+            carrouselItems.forEach((item, i) => {
+                const degressByItem = degress * i + "deg";
+                item.style.setProperty("--rotatey", degressByItem);
+                item.style.setProperty("--tz", tz + "px");
+            });
+        };
+
+        // Funcion que da suavidad a la animacion
+        const lerp = (a, b, n) => {
+            return n * (a - b) + b;
+        };
+
+        // https://3dtransforms.desandro.com/carousel
+        const distanceZ = (widthElement, length, gap) => {
+            return (widthElement / 2) / Math.tan(Math.PI / length) + gap; // Distancia Z de los items
+        }
+
+        // Calcula el alto del contenedor usando el campo de vision y la distancia de la perspectiva
+        const calculateHeight = z => {
+            const t = Math.atan(90 * Math.PI / 180 / 2);
+            const height = t * 2 * z;
+
+            return height;
+        };
+
+        // Calcula el campo de vision del carrousel
+        const calculateFov = carrouselProps => {
+            const perspective = window
+                .getComputedStyle(containerCarrousel)
+                .perspective.split("px")[0];
+
+            const length =
+                Math.sqrt(carrouselProps.w * carrouselProps.w) +
+                Math.sqrt(carrouselProps.h * carrouselProps.h);
+            const fov = 2 * Math.atan(length / (2 * perspective)) * (180 / Math.PI);
+            return fov;
+        };
+
+        // Obtiene la posicion X y evalua si la posicion es derecha o izquierda
+        const getPosX = x => {
+            currentMousePos = x;
+
+            moveTo = currentMousePos < lastMousePos ? moveTo - 2 : moveTo + 2;
+
+            lastMousePos = currentMousePos;
+        };
+
+        const update = () => {
+            lastMoveTo = lerp(moveTo, lastMoveTo, 0.05);
+            carrousel.style.setProperty("--rotatey", lastMoveTo + "deg");
+
+            requestAnimationFrame(update);
+        };
+
+        const onResize = () => {
+            // Obtiene la propiedades del tamaño de carrousel
+            const boundingCarrousel = containerCarrousel.getBoundingClientRect();
+
+            const carrouselProps = {
+                w: boundingCarrousel.width,
+                h: boundingCarrousel.height
+            };
+
+            return carrouselProps;
+        };
+
+        const initEvents = () => {
+            // Eventos del mouse
+            carrousel.addEventListener("mousedown", () => {
+                isMouseDown = true;
+                carrousel.style.cursor = "grabbing";
+            });
+            carrousel.addEventListener("mouseup", () => {
+                isMouseDown = false;
+                carrousel.style.cursor = "grab";
+            });
+            container.addEventListener("mouseleave", () => (isMouseDown = false));
+
+            carrousel.addEventListener(
+                "mousemove",
+                e => isMouseDown && getPosX(e.clientX)
+            );
+
+            // Eventos del touch
+            carrousel.addEventListener("touchstart", () => {
+                isMouseDown = true;
+                carrousel.style.cursor = "grabbing";
+            });
+            carrousel.addEventListener("touchend", () => {
+                isMouseDown = false;
+                carrousel.style.cursor = "grab";
+            });
+            container.addEventListener(
+                "touchmove",
+                e => isMouseDown && getPosX(e.touches[0].clientX)
+            );
+
+            window.addEventListener("resize", createCarrousel);
+
+            update();
+            createCarrousel();
+        };
+
+        initEvents();
+</script>
+</html>

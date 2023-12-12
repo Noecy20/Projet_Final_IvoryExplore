@@ -11,6 +11,299 @@
 /*FIN CSS POUR FOOTER*/
 
 /*DEBUT CSS POUR ECOLE*/
+/* ----------------------- Page ecole (Desirée)----------------------- */
+
+.viewtrier {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  /* border: 2px solid red; */
+  margin-top: 10%;
+}
+
+.View {
+  left: 10%;
+  color: black;
+  font-size: 40px;
+  font-family: Inter;
+  font-weight: 400;
+  background: rgb(244, 225, 225);
+  word-wrap: break-word;
+  border: 2px solid gold;
+
+}
+
+.View:hover {
+  background-color: white;
+  opacity: 0.8;
+  box-shadow: 0 0 10px 10px #aaa;
+}
+
+.trierpar {
+  height: 125px;
+  width: 125px;
+  left: 80%;
+  background: rgb(244, 225, 225);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid gold;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.trierpar:hover {
+  background-color: white;
+  opacity: 0.8;
+  box-shadow: 0 0 10px 10px #aaa;
+
+}
+
+.trierpar a,
+.View a {
+  text-decoration: none;
+  color: black;
+}
+
+
+/* * Importing Google font - Open Sans */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+*/ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  background: #ecececdb;
+}
+
+/* 
+.custom-image-size img {
+  width: 4839px;
+  height: 3012px;
+  object-fit: center;
+} */
+
+.card-list-ecole {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  max-width: 1250px;
+  margin: 150px auto;
+  padding: 20px;
+  gap: 20px;
+  /* border: 2px solid red; */
+}
+
+.card-list-ecole .card-item-ecole {
+  background: #fff;
+  padding: 26px;
+  border-radius: 8px;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.04);
+  list-style: none;
+  cursor: pointer;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: border 0.5s ease;
+}
+
+.card-list-ecole .card-item-ecole ul {
+  list-style-type: none;
+}
+
+.card-list-ecole .card-item-ecole:hover {
+  border: 2px solid #000;
+}
+
+.card-list-ecole .card-item-ecole img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.card-list-ecole span {
+  display: inline-block;
+  background: #F7DFF5;
+  margin-top: 32px;
+  padding: 8px 15px;
+  font-size: 0.75rem;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.card-list-ecole .developer {
+  background-color: #F7DFF5;
+  color: #B22485;
+}
+
+.card-list-ecole .designer {
+  background-color: #d1e8ff;
+  color: #2968a8;
+}
+
+.card-item-ecole .content .title {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.card-item-ecole .content .sub-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #e74c3c;
+  line-height: 20px;
+}
+
+.card-item-ecole .content p {
+  text-align: justify;
+  margin: 10px 0;
+}
+
+/* 
+@media (max-width: 1200px) {
+  .card-list .card-item {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .card-list {
+    margin: 0 auto;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+} */
+
+h1 {
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* Image lightbox styling */
+.lightbox {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  position: fixed;
+  visibility: hidden;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.lightbox.show {
+  visibility: visible;
+}
+
+.lightbox .wrapper {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  padding: 20px;
+  max-width: 850px;
+  background: #fff;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.9);
+  transition: transform 0.1s ease;
+}
+
+.lightbox.show .wrapper {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.wrapper :where(header, .details) {
+  display: flex;
+  align-items: center;
+}
+
+.wrapper header {
+  justify-content: space-between;
+}
+
+header .details i {
+  font-size: 1.7rem;
+}
+
+header .details span {
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+/* header .buttons{
+  background: green;
+  height: 40px;
+  width: 40px;
+} */
+
+
+header .buttons i {
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  display: inline-block;
+  color: #fff;
+  margin-left: 10px;
+  background: #6C757D;
+  font-size: 1.25rem;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+
+header .buttons i:hover {
+  background: #5f666d;
+}
+
+.wrapper .preview-img {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.preview-img .img {
+  max-height: 65vh;
+}
+
+
+.preview-img img {
+  width: 100%;
+  height: 80%;
+  object-fit: contain;
+}
+
+/* Responsive media query code */
+/* @media screen and (max-width: 688px) {
+  .lightbox .wrapper {
+    padding: 12px;
+    max-width: calc(100% - 26px);
+  }
+
+  .wrapper .preview-im {
+    margin-top: 15px;
+  }
+
+} */
+
+
+/* ----------------------- FIN Page ecole (Desirée)----------------------- */
 /*FIN CSS POUR ECOLE*/
 
 /*DEBUT CSS POUR FILM*/

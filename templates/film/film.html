@@ -2,4 +2,184 @@
 
 {%block centre%}
 
- {%endblock centre%}
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="static/images/image_Film/35mm_movie_negative.jpg" class="d-block w-100 img-fluid" alt="..."
+                width="80%">
+        </div>
+        <div class="carousel-item">
+            <img src="static/images/image_Film/WhatsApp Image 2023-12-12 ├á 14.39.14_e9dc6847.jpg"
+                class="d-block w-100 img-fluid" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<!-- /carrousel -->
+
+<section class="sect_restaurant">
+    <div class="container2_restaurant">
+        <button id="refresh" class="btn1_resto" onclick="document.location.reload(false)">
+            <p> Autre Propositions</p>
+        </button>
+        <button id="filtre" class="btn2_resto">
+            <p>Trier par</p>
+        </button>
+        <div class="wrapper_2">
+            <div class="display">
+                <div id="time"></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="div-card-filter">
+    <!-- Card List Restaurant -->
+    <div class="card-list_restaurant resto">
+        <div class="card-item_restaurant">
+            <ul class="images">
+                <li class="img"><img src="./static/images/image_Film/WhatsApp Image 2023-12-12 ├á 14.29.37_ae36b798.jpg"
+                        alt="img">
+                </li>
+            </ul>
+            <span class="nomResto1">Titre du film</span>
+            <span class="nomResto1">Genre</span>
+            <h4>A "developer" codes software and websites.An "editor" ensures content quality and accuracy</h4>
+
+        </div>
+        <div class="card-item_restaurant">
+            <ul class="images">
+                <li class="img"><img src="./static/images/image_Film/WhatsApp Image 2023-12-12 ├á 14.29.37_ae36b798.jpg"
+                        alt="img">
+                </li>
+            </ul>
+            <span class="nomResto2">Titre du film</span>
+            <span class="nomResto1">Genre</span>
+            <h4>A "designer" is a design expert.An "editor" ensures content quality and accuracy</h4>
+        </div>
+        <div class="card-item_restaurant">
+            <ul class="images">
+                <li class="img"><img src="./static/images/image_Film/format-arw-PXjQaGxi4JA-unsplash 1.png"
+                        alt="img">
+                </li>
+            </ul>
+            <span class="nomResto3">Titre du film</span>
+            <span class="nomResto1">Genre</span>
+            <h4>An "editor" ensures content quality and accuracy.An "editor" ensures content quality and accuracy</h4>
+        </div>
+        <div class="card-item_restaurant">
+            <ul class="images">
+                <li class="img"><img src="/static/images/image_Film/a45a1bb64e33d0f02b584af3b9c26f59.jpg" alt="img">
+                </li>
+            </ul>
+            <span class="nomResto4">Titre du film</span>
+            <span class="nomResto1">Genre</span>
+            <h4>An "editor" ensures content quality and accuracy.An "editor" ensures content quality and accuracy</h4>
+        </div>
+        <div class="card-item_restaurant">
+            <ul class="images">
+                <li class="img"><img src="/static/images/image_Film/a45a1bb64e33d0f02b584af3b9c26f59.jpg" alt="img">
+                </li>
+            </ul>
+            <span class="nomResto5">Titre du film</span>
+            <span class="nomResto1">Genre</span>
+            <h4>An "editor" ensures content quality and accuracy.An "editor" ensures content quality and accuracy</h4>
+        </div>
+
+    </div>
+
+    <!-- MY FILTER -->
+    <!-- Contenu à faire apparaître depuis la droite -->
+    <form id="contenue-filtrer" class="contenue-filtre" method="post">
+        <div class="wrapper_resto">
+            <header class="h_resto">
+                <h3 class="filter-h3">TRIER PAR RAPPORT A </h3>
+            </header>
+            <label for="genre" class="lab_resto"><strong>Genre</strong></label>
+            <select id="genre" name="genre" class="selection_resto">
+                <!-- Liste déroulante des villes et quartiers de la Côte d'Ivoire -->
+                <option value="Adventure">Adventure</option>
+                <option value="Animation">Animation</option>
+                <option value="Children">Children</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Romance">Romance</option>
+                <option value="Drama">Drama</option>
+                <option value="Action">Action</option>
+                <option value="Crime">Crime</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Horror">Horror</option>
+                <option value="Mystery">Mystery</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="IMAX">IMAX</option>
+                <option value="Documentary">Documentary</option>
+                <option value="War">War</option>
+                <option value="Musical">Musical</option>
+                <option value="Western">Western</option>
+                <option value="Film-Noir">Film-Noir</option>
+                <option value="(no genres listed)">(no genres listed)</option>
+            </select>
+
+            <div class="price-input">
+                <div class="field">
+                    <span>Note Minimale</span>
+                    <input type="number" class="input-min" value="0">
+                </div>
+                <div class="separator">
+                    -
+                </div>
+                <div class="field">
+                    <span>Max</span>
+                    <input type="number" class="input-max" value="10">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="progress"></div>
+            </div>
+            <div class="range-input">
+                <input type="range" class="range-min" min="0" max="10000" value="0" step="0,5">
+                <input type="range" class="range-max" min="0" max="10000" value="10" step="0,5">
+            </div>
+        </div>
+
+    </form>
+    <!-- <div id="content" class="hidden filter-content">
+       
+    </div> -->
+</div>
+<div class="lightbox">
+    <div class="wrapper">
+        <header>
+            <div class="details">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Titre du film</span>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-xmark " id="close-icon"></i>
+            </div>
+        </header>
+        <!-- ici que je  dois modifier-->
+        <div class="preview-img">
+            <div class="img">
+                <img src="" alt="preview-img">
+            </div>
+            <div class="info_resto">
+                <div>Titre du film</div>
+                <div>Auteurt</div>
+                <div>Année de sortie</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock centre%}

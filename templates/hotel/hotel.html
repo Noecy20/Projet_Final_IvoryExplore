@@ -1,5 +1,136 @@
 {%extends 'base.html'%}
 
 {%block centre%}
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/static/images/image_Hotel/sofitel-abidjan-hotel.jpg" class="d-block w-100 img-fluid" alt="..." width="80%">
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/image_Hotel/img1.jpg" class="d-block w-100 img-fluid"
+                alt="..." width="80%">
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/image_Hotel/sofitel-abidjan-hotel.jpg" class="d-block w-100 img-fluid" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+<!-- /carrousel -->
 
+
+
+
+
+<section class="sect_restaurant">
+    <div class="container2_restaurant">
+        <button id="refresh" class="btn1_resto" onclick="document.location.reload(false)">
+            <p> Autre Propositions</p>
+        </button>
+        <button id="filtre" class="btn2_resto">
+            <p>Trier par</p>
+        </button>
+        <div class="wrapper_2">
+            <div class="display">
+                <div id="time"></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<div class="div-card-filter">
+    <!-- Card List Restaurant -->
+    <div class="card-list_restaurant resto">
+        {% for row in data %}
+        <div class="card-item_restaurant">
+            <ul class="images">
+                <li class="img"><img src="/static/images/image_Hotel/img1.jpg" alt="img">
+                </li>
+            </ul>
+            <span class="nomResto1">{{row[1]}}</span>
+            <h4><a href="{{row[2]}}">voir emplacement de l'hotel</a> </h4>
+
+        </div>
+        {% endfor %}
+
+
+    </div>
+
+    <!-- MY FILTER -->
+    <!-- Contenu à faire apparaître depuis la droite -->
+    <form id="contenue-filtrer" class="contenue-filtre" method="post">
+        <div class="wrapper_resto">
+            <header class="h_resto">
+                <h3 class="filter-h3">TRIER PAR RAPPORT A </h3>
+            </header>
+            <label for="localite" class="lab_resto"><strong>Localité</strong></label>
+            <select id="localite" name="localite" class="selection_resto">
+                <!-- Liste déroulante des villes et quartiers de la Côte d'Ivoire -->
+                <option value="Abidjan">Abidjan</option>
+                <option value="Yamoussoukro">Yamoussoukro</option>
+            </select>
+
+            <div class="price-input">
+                <div class="field">
+                    <span>Min</span>
+                    <input type="number" class="input-min" value="2500">
+                </div>
+                <div class="separator">
+                    -
+                </div>
+                <div class="field">
+                    <span>Max</span>
+                    <input type="number" class="input-max" value="7500">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="progress"></div>
+            </div>
+            <div class="range-input">
+                <input type="range" class="range-min" min="0" max="10000" value="2500" step="100">
+                <input type="range" class="range-max" min="0" max="10000" value="7500" step="100">
+            </div>
+        </div>
+
+    </form>
+    <!-- <div id="content" class="hidden filter-content">
+       
+    </div> -->
+</div>
+<div class="lightbox">
+    <div class="wrapper">
+        <header>
+            <div class="details">
+                <i class="fa-solid fa-utensils"></i>
+                <span>Nom du hotel</span>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-xmark " id="close-icon"></i>
+            </div>
+        </header>
+        <!-- ici que je  dois modifier-->
+        <div class="preview-img">
+            <div class="img">
+                <img src="" alt="preview-img">
+            </div>
+            <div class="info_resto">
+                <div>Nom de l'hotel</div>
+                <div>lieu de l'hotel</div>
+                <div>Contact hotel</div>
+            </div>
+        </div>
+    </div>
+</div>
  {%endblock centre%}

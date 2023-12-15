@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -7,34 +7,83 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inria+Serif&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='logo-removebg-preview.ico') }}" type="image/png">
     <title>page inscription</title>
     <style>
         body {
             font-family: 'Inria Serif', serif;
-            background-color: #ffffff;
-            /* background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.9)), url("../static/igor-miske-Px3iBXV-4TU-unsplash.jpg"); */
-            background-size: cover;
-            background-repeat: no-repeat;
-            height: 100vh;
+            background-color: whitesmoke;
+        }
+
+        .Presentation_container {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            /* align-items: center; */
+            /* border: 2px solid red; */
+            margin-top: 7%;
+        }
+
+        .present_inscrip {
+            width: 90%;
+            padding: 16px;
+            height: 350px;
+            /* background-color: wheat; */
+            /* margin-top: 100px;
+            margin-left: 600px; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
+            /* border-radius: 20px;   */
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         }
 
         .container_inscription {
             width: 40%;
             padding: 16px;
-            height: 350px;
-            /* background-color: white; */
-            margin-top: 100px;
-            margin-left: 600px;
+            height: 100%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             background-color: rgba(15, 106, 145, 0.7);
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
             opacity: 1;
-            border-radius: 20px;
-            /* border: #997C44 solid ; */
-            /* box-shadow: 0 0 8px 8px rgba(153,124,68,0.3); */
+            /* border-radius: 20px; */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .case_image {
+            width: 40%;
+            height: 100%;
+            padding: 16px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            background: linear-gradient(rgba(20, 38, 20, 0.75), rgba(0, 0, 0, 0.75)), url("/static/images/image_Ecole/WhatsApp\ Image\ 2023-12-13\ à\ 17.11.55_65004c76.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+
+        .case_image :first-child {
+            color: #f1f1f1;
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .case_image :nth-child(2) {
+            color: darkcyan;
+            text-align: center;
+            font-weight: bold;
         }
 
         .container_inscription a {
@@ -43,7 +92,7 @@
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
+            margin-bottom: 20px;
             color: black;
             /* font-size: 20px; */
             font-weight: bold;
@@ -52,8 +101,9 @@
         input[type=text]:focus,
         input[type=password]:focus,
         input[type=email]:focus {
-            background-color: #ddd;
             outline: none;
+            border: 2px solid black;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.7)
         }
 
         button {
@@ -78,7 +128,7 @@
 
         button:hover {
             opacity: 1;
-            background-color: steelblue;
+            background-color: bisque;
         }
 
         .nom,
@@ -88,8 +138,9 @@
         .mdp,
         .mdpc {
             /* border: solid red; */
-            /* height: 50px; */
-            width: 40%;
+            height: 50px;
+            width: 42%;
+
 
         }
 
@@ -132,80 +183,65 @@
             align-items: center;
 
         }
-
-        .Presentation_container {
-            width: 100%;
-            /* height: ; */
-        }
-
-        .Presentation_Inscription {
-            color: #ffffff
-        }
     </style>
 </head>
 
 <body>
 
     <div class="Presentation_container">
-        <div class="Presentation_Inscription">
-            Bienvenue sur IvoryExplore
+        <div class="present_inscrip">
+            <div class="case_image">
+                <p>IVORY EXPLORE
+                    <br>application de recommendation
+                </p>
+                <p>Inscrivez-vous pour en profiter</p>
+            </div>
+
+            <form class="container_inscription" method="POST">
+                <div class="nom_prenom">
+                    <div class="nom">
+                        <input type="text" placeholder="Entrer votre nom" name="nom_user" required>
+                    </div>
+
+                    <div class="prenom">
+                        <input type="text" placeholder="Entrer votre prénom" name="prenom_user" required>
+                    </div>
+                </div>
+                <div class="username_email">
+                    <div class="username">
+                        <input type="text" placeholder="Entrer votre username" name="username" required>
+                    </div>
+
+                    <div class="email">
+                        <input type="email" placeholder="Entrer votre email" name="email" required>
+                    </div>
+                </div>
+                <div class="mdp_mdpc">
+                    <div class="mdp">
+                        <input type="password" placeholder="Entrer votre mot de passe" name="passwords" required>
+                    </div>
+
+                    <div class="mdpc">
+                        <input type="password" placeholder="Confirmer votre mot de passe" name="pss" required>
+                    </div>
+                </div>
+
+                <button type="submit">S'inscrire</button><br>
+                <a href="{{url_for('connexion')}}">Déjà un compte? Connectez-vous</a>
+                
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                   {% endwith %}
+            </form>
         </div>
-
-        <form action="{{ url_for('connexion') }}" method="post" class="container_inscription">
-            <!-- <p>Inscription</p> -->
-            <div class="nom_prenom">
-                <div class="nom">
-                    <!-- <label for="fname"><b>Votre nom</b></label> -->
-                    <input type="text" placeholder="Entrer votre nom" name="fname" required>
-                </div>
-
-                <div class="prenom">
-                    <!-- <label for="lname"><b>Votre prénom</b></label> -->
-                    <input type="text" placeholder="Entrer votre prénom" name="lname" required>
-                </div>
-            </div>
-            <div class="username_email">
-                <div class="username">
-                    <!-- <label for="uname"><b>Votre username/Pseudo</b></label> -->
-                    <input type="text" placeholder="Entrer votre username" name="uname" required>
-                </div>
-
-                <div class="email">
-                    <!-- <label for="email"><b>Votre email</b></label> -->
-                    <input type="email" placeholder="Entrer votre email" name="email" required>
-                </div>
-            </div>
-            <div class="mdp_mdpc">
-                <div class="mdp">
-                    <!-- <label for="psw"><b>Votre mot de passe</b></label> -->
-                    <input type="password" placeholder="Entrer votre mot de passe" name="psw" required>
-                </div>
-
-                <div class="mdpc">
-                    <!-- <label for="psw-repeat"><b>Confirmer mot de passe</b></label> -->
-                    <input type="password" placeholder="Confirmer votre mot de passe" name="psw-repeat" required>
-                </div>
-            </div>
-
-            <button type="submit">S'inscrire</button><br>
-            <a href="{{ url_for('connexion') }}">Déjà un compte? Connectez-vous</a>
-        </form>
     </div>
-    <script>
-        document.querySelector('form').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            var password = document.querySelector('input[name="psw"]').value;
-            var confirmPassword = document.querySelector('input[name="psw-repeat"]').value;
-
-            if (password !== confirmPassword) {
-                alert('Les mots de passe ne correspondent pas!');
-            } else {
-                alert('Inscription réussie!');
-            }
-        });
-    </script>
-
 </body>
 
 </html>

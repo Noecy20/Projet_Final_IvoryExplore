@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='logo-removebg-preview.ico') }}" type="image/png">
+    <title>choisi tes préférences</title>
 </head>
 
 <style>
@@ -263,7 +265,7 @@ background-color: red;
 
 
     <div class="buttons">
-        <a href="#" class="signin">Retour</a>
+        <a href="{{url_for('inscription')}}" class="signin">Retour</a>
         <a href="{{url_for('accueil')}}" class="signup">Suivant</a>
     </div>
 </body>

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='logo-removebg-preview.ico') }}" type="image/png">
+
     <title>Ivory Explore</title>
 
     <style>
@@ -239,15 +241,15 @@ body{
               <div class="login-form">
                 <div class="title">Connexion</div>
 
-              <form action="{{ url_for('accueil') }}">
+              <form method="POST">
                 <div class="input-boxes">
                   <div class="input-box">
                     <i class="fas fa-envelope"></i>
-                    <input type="text" placeholder="Entrer votre Email" required>
+                    <input type="text" placeholder="Entrer votre Email" required name="email">
                   </div>
                   <div class="input-box">
                     <i class="fas fa-lock"></i>
-                    <input type="password" placeholder="Entrer Votre Mot de Passe" required>
+                    <input type="password" placeholder="Entrer Votre Mot de Passe" required name="passwords">
                   </div>
                   <div class="text"><a href="#">Mot De Passe Oublier?</a></div>
                   <div class="button input-box">
@@ -255,6 +257,14 @@ body{
                   </div>
                   <div class="text sign-up-text">vous n'avez pas de compte? <a href="{{url_for('inscription')}}">Créer un compte</a>
                   </div></div>
+                  {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                  {% for message in messages %}
+                  <div class="alert-{{category}}" id="mes">{{message}}</div>
+                  {% endfor %}
+                  {% endif %}
+                  {% endwith %}
+
             </form>
               </div></div></div></div>
 

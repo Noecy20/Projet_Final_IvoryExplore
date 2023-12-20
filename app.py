@@ -1,4 +1,4 @@
-from flask import Flask,render_template, url_for, request, redirect, flash
+from flask import Flask,render_template, url_for, request, redirect, flash,session
 import pyodbc
 
 import pandas as pd
@@ -9,7 +9,7 @@ app.config['SECRET_KEY'] = 'clés_flash'
 
 app.config['SQL_SERVER_CONNECTION_STRING'] = r"""
     Driver={SQL Server};
-    Server=DESKTOP-DLHA7UR\SQLEXPRESS;
+    Server=MTN-Academy\SQLEXPRESS;
     Database=ivory;
     Trusted_Connection=yes;"""
 
@@ -47,13 +47,14 @@ def index(request, df_knn_final_X=None, df=None):
 #PREMIERE ROUTE ==> LA PREMIERE PAGE POUR LE USER
 @app.route('/')
 def index():
+    
     return render_template("index.html")
 
 # DEBUT DE LA PAGE dasbord
 # ROUTE ==> LA PAGE dasbord
-@app.route('/dashbord')
-def dash():
-    return render_template("dashbord.html")
+# @app.route('/dashbord')
+# def dash():
+#     return render_template("dashbord.html")
 #LA PAGE INSCRIPTION
 # DEBUT DE LA PAGE INSCRIPTION
 # ROUTE ==> LA PAGE INSCRIPTION
@@ -66,6 +67,11 @@ def inscription():
 #ROUTE ==> LA PAGE CONNEXION
 @app.route('/Connexion')
 def connexion():
+    conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = conn.cursor()
+    # cursor.execute("SELECT * FROM users where email=?",(email,))
+    # user = cursor.fetchone()
+    # session["user"]=user
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
 
@@ -126,6 +132,23 @@ def restaurant():
 @app.route('/carrou')
 def carrou():
     return render_template("carroussel_resto.html")
+
+
+#dashoard
+@app.route('/dashbord',methods = ['POST', 'GET'])
+def dashbord():
+    if(session['users'][4]!="admin"):
+        return redirect(request.referrer)
+    else:
+        conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+        cursor = conn.cursor()
+        cursor.execute("select * from users")
+        # cursor.execute(""" SELECT * FROM Transfert """)
+        data = cursor.fetchall()
+        conn.commit()
+        conn.close()
+        return render_template("dashbord.html" , data1=data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

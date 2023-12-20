@@ -242,3 +242,76 @@ img {
         initEvents();
 </script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if request.method == 'POST' and 'nom_user' in request.form and 'prenom_user' in request.form and 'username' in
+request.form and 'email' in request.form and 'passwords' in request.form:
+email = request.form['email']
+nom_user = request.form['nom_user']
+prenom_user = request.form['prenom_user']
+username = request.form['username']
+passwords = request.form["passwords"]
+cript_mdp = generate_password_hash(passwords)
+
+conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+cursor = conn.cursor()
+
+# Account doesnt exists and the form data is valid, now insert new account into users table
+cursor.execute("INSERT INTO users (nom_user, prenom_user, username, email, passwords) VALUES (?, ?, ?, ?, ?)",
+(nom_user, prenom_user, username, email, passwords))
+conn.commit()
+
+flash('Enregistrement reuissit !')
+return redirect(url_for('preference'))
+else: data=''
+
+cursor.execute("SELECT * FROM users WHERE nom_user = ? or prenom_user = ? or username = ? or email = ? or passwords =
+?", (nom_user, prenom_user, username, email, passwords))
+data_compt = cursor.fetchone()
+print(data_compt)
+
+if data_compt:
+flash('Ce compte existe deja!')
+elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+flash('Email invalide !')
+
+
+elif not nom_user or not prenom_user or not username or not email or not passwords :
+flash('Veuillez remplir le formulaire svp!')
+else:
+
+elif request.method == 'POST':
+# Form is empty... (no POST data)
+flash('Veuillez remplir le formulaire svp!')
+# Show registration form with message (if any)

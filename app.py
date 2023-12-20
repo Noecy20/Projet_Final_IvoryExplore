@@ -1,49 +1,32 @@
+<<<<<<< HEAD
 from flask import Flask,render_template, url_for, request, redirect, flash,session
+=======
+from flask import Flask,render_template, url_for, request, redirect, flash, session
+>>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
 import pyodbc
-
+import re
+import bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'clés_flash'
 
-app.config['SQL_SERVER_CONNECTION_STRING'] = r"""
+app.config['SQL_SERVER_CONNECTION_STRING'] = """
     Driver={SQL Server};
+<<<<<<< HEAD
     Server=MTN-Academy\SQLEXPRESS;
     Database=ivory;
+=======
+    Server=DESKTOP-DLHA7UR\\SQLEXPRESS;
+    Database=IvoryExplore;
+>>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
     Trusted_Connection=yes;"""
 
 conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
 
 
-def index(request, df_knn_final_X=None, df=None):
-    # Load the main database
-    df_full_final_X = pd.read_csv('https://media.githubusercontent.com/Media/Dinoxel/film_reco_app/master/Desktop/projets/projet_2/database_imdb/df_full_final_X.csv', index_col=0)
-
-    # Store the display database
-    df_display_final_def = df_full_final_X.copy()[['titleId', 'title', 'multigenres', 'startYear', 'runtimeMinutes', 'averageRating', 'numVotes', 'nconst']]
-    df_display_final_def['nconst'] = df_display_final_def['nconst'].astype(str)
-
-    # Store the knn database
-    df_knn_final_def = df_full_final_X.copy().drop(columns=['averageRating', 'numVotes', 'startYear', 'runtimeMinutes', 'multigenres', 'years', 'nconst'])
-
-    # Select all boolean columns
-    X = df_knn_final_X.iloc[:, 2:].columns
-
-    # Set the base weight for all columns to 1
-    df_weights = pd.DataFrame([[1 for x in X]], columns=X)
-
-    # Set the weights for each part
-    weight_genres = 0.65
-    weight_rating_low = 0.75
-    weight_reals = 1.25
-    weight_actors = 0.5
-    weight_years = 0.85
-    weight_years_low = 0.75
-    weight_numvotes_low = 0.5
-    weight_numvotes_med = 0.65
-
-    df_genres = df
 #PREMIERE ROUTE ==> LA PREMIERE PAGE POUR LE USER
 @app.route('/')
 def index():
@@ -52,26 +35,91 @@ def index():
 
 # DEBUT DE LA PAGE dasbord
 # ROUTE ==> LA PAGE dasbord
+<<<<<<< HEAD
 # @app.route('/dashbord')
 # def dash():
 #     return render_template("dashbord.html")
+=======
+@app.route('/dashbord')
+def dash():
+    return render_template("dashbord.html")
+
+>>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
 #LA PAGE INSCRIPTION
 # DEBUT DE LA PAGE INSCRIPTION
 # ROUTE ==> LA PAGE INSCRIPTION
-@app.route('/Inscription')
+@app.route('/Inscription',methods=["GET", "POST"])
 def inscription():
+    if request.method == 'POST':
+        nom_user = request.form["nom_user"]
+        prenom_user = request.form["prenom_user"]
+        username = request.form["username"]
+        email = request.form["email"]
+        passwords = request.form["passwords"]
+        hashed_password = generate_password_hash(passwords)
+
+        conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE username = ? OR email = ?', (username, email))
+        users = cursor.fetchall()
+
+        if users:
+            flash("ce compte existe déjà !", 'info')
+        elif not re.match(r'[a-zA-Z0-9]+$', username):
+            flash("Le nom d'utilisateur ne doit contenir que des lettres et des chiffres !", 'info')
+            return redirect(url_for('inscription'))
+        elif not re.match(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+            flash("Email Invalid !", 'info')
+            return redirect(url_for('inscription'))
+
+        else:
+            conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO users (nom_user,prenom_user, username, email, Passwords)
+                VALUES ( ?, ?, ?, ?, ?)
+             ''', (nom_user,prenom_user,username, email, hashed_password))
+            conn.commit()
+            conn.close()
+            flash("Votre compte a été enregistré avec succès !", 'info')
+            return redirect(url_for('preference'))
+
     return render_template("user_connect/inscription.html")
 #LA PAGE INSCRIPTION
 
 # DEBUT DE LA PAGE CONNEXION
 #ROUTE ==> LA PAGE CONNEXION
-@app.route('/Connexion')
+@app.route('/Connexion',methods=["GET", "POST"])
 def connexion():
+<<<<<<< HEAD
     conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
     cursor = conn.cursor()
     # cursor.execute("SELECT * FROM users where email=?",(email,))
     # user = cursor.fetchone()
     # session["user"]=user
+=======
+    if request.method == 'POST':
+        email = request.form["email"]
+        passwords = request.form["passwords"]
+        conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE email = ?', (email))
+        users = cursor.fetchone()
+        if users:
+            user_pswd = users[5]
+            if check_password_hash(user_pswd, passwords):
+                session['loggedin'] = True
+                session['Id'] = users[0]
+                session['username'] = users[1]
+                return redirect(url_for('accueil'))
+            else:
+                flash("Mot de passe incorrect !", 'info')
+                return redirect(url_for('connexion'))
+        else:
+            flash("Identifiant incorrect !", 'info')
+            return redirect(url_for('connexion'))
+
+>>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
 
@@ -96,7 +144,6 @@ def ecole():
     return render_template("ecole/ecole.html")
 # FIN DE LA PAGE ECOLE
 
-
 # DEBUT DE LA PAGE FILM
 #ROUTE ==> LA PAGE FILM
 @app.route('/Film')
@@ -120,18 +167,15 @@ def hotel():
 #ROUTE ==> LA PAGE RESTAURANTS
 @app.route('/Restaurant')
 def restaurant():
-    conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
-    cursor = conn.cursor()
-    cursor.execute(" select * from restaurant")
-    data = cursor.fetchall()
-    
-    return render_template("restaurant/restaurant.html",data=data)
-
+    if 'loggedin' in session:
+        conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+        cursor = conn.cursor()
+        cursor.execute(" select * from restaurant")
+        data = cursor.fetchall()
+        return render_template("restaurant/restaurant.html",data=data)
+    return redirect(url_for('connexion'))
 # FIN DE LA PAGE RESTAURANTS
 
-@app.route('/carrou')
-def carrou():
-    return render_template("carroussel_resto.html")
 
 
 #dashoard

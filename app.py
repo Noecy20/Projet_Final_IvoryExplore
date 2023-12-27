@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-from flask import Flask,render_template, url_for, request, redirect, flash,session
-=======
+
 from flask import Flask,render_template, url_for, request, redirect, flash, session
->>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
+
 import pyodbc
 import re
 import bcrypt
@@ -15,13 +13,8 @@ app.config['SECRET_KEY'] = 'clés_flash'
 
 app.config['SQL_SERVER_CONNECTION_STRING'] = """
     Driver={SQL Server};
-<<<<<<< HEAD
     Server=MTN-Academy\SQLEXPRESS;
-    Database=ivory;
-=======
-    Server=DESKTOP-DLHA7UR\\SQLEXPRESS;
-    Database=IvoryExplore;
->>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
+    Database=ivoryexplore;
     Trusted_Connection=yes;"""
 
 conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
@@ -35,16 +28,16 @@ def index():
 
 # DEBUT DE LA PAGE dasbord
 # ROUTE ==> LA PAGE dasbord
-<<<<<<< HEAD
+
 # @app.route('/dashbord')
 # def dash():
 #     return render_template("dashbord.html")
-=======
-@app.route('/dashbord')
-def dash():
-    return render_template("dashbord.html")
 
->>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
+# @app.route('/dashbord')
+# def dash():
+#     return render_template("dashbord.html")
+
+
 #LA PAGE INSCRIPTION
 # DEBUT DE LA PAGE INSCRIPTION
 # ROUTE ==> LA PAGE INSCRIPTION
@@ -89,21 +82,21 @@ def inscription():
 
 # DEBUT DE LA PAGE CONNEXION
 #ROUTE ==> LA PAGE CONNEXION
-@app.route('/Connexion',methods=["GET", "POST"])
+@app.route('/connexion',methods=["GET", "POST"])
 def connexion():
-<<<<<<< HEAD
-    conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
-    cursor = conn.cursor()
-    # cursor.execute("SELECT * FROM users where email=?",(email,))
-    # user = cursor.fetchone()
-    # session["user"]=user
-=======
+# <<<<<<< HEAD
+#     conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+#     cursor = conn.cursor()
+#     # cursor.execute("SELECT * FROM users where email=?",(email,))
+#     # user = cursor.fetchone()
+#     # session["user"]=user
+# =======
     if request.method == 'POST':
         email = request.form["email"]
         passwords = request.form["passwords"]
         conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email))
+        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         users = cursor.fetchone()
         if users:
             user_pswd = users[5]
@@ -111,6 +104,8 @@ def connexion():
                 session['loggedin'] = True
                 session['Id'] = users[0]
                 session['username'] = users[1]
+                session['role']=users[6]
+                print(session['role'])
                 return redirect(url_for('accueil'))
             else:
                 flash("Mot de passe incorrect !", 'info')
@@ -119,7 +114,7 @@ def connexion():
             flash("Identifiant incorrect !", 'info')
             return redirect(url_for('connexion'))
 
->>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
+# >>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
 
@@ -181,17 +176,18 @@ def restaurant():
 #dashoard
 @app.route('/dashbord',methods = ['POST', 'GET'])
 def dashbord():
-    if(session['users'][4]!="admin"):
+    if session['role'] != 'admin':
         return redirect(request.referrer)
     else:
         conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
         cursor = conn.cursor()
-        cursor.execute("select * from users")
+        cursor.execute("select  * from users")
         # cursor.execute(""" SELECT * FROM Transfert """)
         data = cursor.fetchall()
+        nbr_user=len(data)
         conn.commit()
         conn.close()
-        return render_template("dashbord.html" , data1=data)
+        return render_template("dashbord.html" , data1=data, nbr_user=nbr_user)
 
 
 if __name__ == "__main__":

@@ -833,7 +833,7 @@ li i {
             </li>
             <li>
               <i class="fa-regular fa-pen-to-square"></i>
-                <a href="#">Modifier Préférence</a>
+                <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
                 <br>
                 <i class="fa-solid fa-circle-user"></i>
                 <a href="#">Modifier Mon Compte</a>
@@ -852,7 +852,7 @@ li i {
             </li>
             <li>
               <i class="fa-solid fa-right-from-bracket"></i>
-                <a href="#">Quitter/Se deconnecter</a>
+                <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
                 <br>
                 <i class="fa-solid fa-trash-can"></i>
                 <a href="#">Supprimer</a>
@@ -889,6 +889,38 @@ li i {
 </section>
 
 <!-- premier bloc de texte + image  -->
+
+{% if data_h %}
+<!-- seulement hotel -->
+{% for row in data_h %}
+
+<section class="hotel">
+  <div class="texte">
+      <h1>{{row[3]}}</h1>
+      <p>{{row[2]}}</p>
+
+      <div class="rating-box">
+          <h1>How was your experience?</h1>
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+          </div>
+        </div>
+  </div>
+
+  <div class="hotel-img">
+      <img src="../static/images/images/image-hôtel.jpg" width="100%" height="300px" alt="image-hôtel">
+  </div>
+</section>
+{%endfor%}
+
+<!-- deuxième bloc ecole + image  -->
+
+
+{% else %}
 
 
 <section class="hotel">
@@ -996,6 +1028,7 @@ li i {
       </div>
   </div>
 </section>
+{% endif%}
 
 <script>
 

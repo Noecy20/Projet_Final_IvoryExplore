@@ -269,7 +269,53 @@ def hotel():
     return render_template("hotel/hotel.html",data=data)
  else:
         return redirect(url_for('connexion'))
- 
+
+
+@app.route('/vue_hotel', methods=['GET', 'POST'])
+def vue_hotel():
+
+# Créer une variable pour le lieu
+        latitude = request.args.get('latitude')
+        longitude = request.args.get('longitude')
+
+        print(latitude)
+        try:
+            lat = float(latitude)
+            long = float(longitude)
+        except ValueError:
+            return 'Les coordonnées doivent être des nombres'
+        lieu = {
+            "latitude": lat,
+            "longitude": long,
+                } 
+        carte_unique = folium.Map(location=[lat,long], zoom_start=10)
+        marqueur = folium.Marker(location=[latitude, longitude],popup="Paris",icon=folium.Icon(icon='star', color='red', prefix='fa'))
+        marqueur.add_to(carte_unique)
+
+        path = os.path.join(app.root_path, "templates", "carte_unique.html")  
+        if os.path.exists(path):  
+            os.remove(path)
+
+        with open(path, "w" ,encoding="utf-8" ) as f: 
+            f.write(carte_unique.get_root().render())
+
+        return redirect(url_for("vue_unique_hotel"))
+    
+    
+
+@app.route("/vue_unique_hotel")
+def  vue_unique_hotel():
+    if 'loggedin' in session: 
+         path = os.path.join(app.root_path, "templates", "carte_unique.html")
+         if os.path.exists(path):
+          return render_template("carte_unique.html")
+         else:
+             return redirect(url_for('hotel'))
+    else:
+      return redirect(url_for('connexion'))
+    
+
+
 @app.route("/carte")
 def carte():
  if 'loggedin' in session: 
@@ -292,7 +338,7 @@ def carte():
     if os.path.exists(path):  # Vérification de l'existence du fichier
         os.remove(path)  # Suppression du fichier existant
 
-    with open(path, "w" ,encoding="utf-8") as f:  # Ouverture du fichier en mode écriture
+    with open(path, "w" ,encoding="utf-8" ) as f:  # Ouverture du fichier en mode écriture
         f.write(ma_carte.get_root().render()) # Écriture du contenu HTML de la carte
     return redirect(url_for('vue'))
  else:

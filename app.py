@@ -1,29 +1,23 @@
-from flask import Flask,render_template, url_for, request, redirect, flash, session
+from flask import Flask, render_template, url_for, request, redirect, flash, session
 import pyodbc
 import re
-import os
-import folium
-import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-import pandas as pd
-from folium.plugins import MarkerCluster
-
 
 app = Flask(__name__)
 
     # Initialisation de l'extension Flask-WTF
 
 
-app.config['SECRET_KEY'] ='clés_flash'
-DRIVER_NAME = 'SQL SERVER'
-SERVER_NAME = 'DESKTOP-02KB7J2'
-DATABASE_NAME = 'ivoryExplore'
+# app.config['SECRET_KEY'] ='clés_flash'
+# DRIVER_NAME = 'SQL SERVER'
+# SERVER_NAME = 'DESKTOP-02KB7J2'
+# DATABASE_NAME = 'ivoryExplore'
 
-connection_string = f"""
-    DRIVER={{{DRIVER_NAME}}};
-    SERVER={SERVER_NAME};
-    DATABASE={DATABASE_NAME};
-    Trust_connection=yes;"""
+app.config['SQL_SERVER_CONNECTION_STRING'] = """
+    Driver={SQL Server};
+    Server=DESKTOP-K074SIS\SQLEXPRESS;
+    Database=IvoryExplore;
+    Trusted_Connection=yes;"""
 
 
 

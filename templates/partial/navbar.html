@@ -916,6 +916,57 @@ li i {
 
       <div class="search" >
         <div class="input-box">
+          const express = require('express');
+          const sql = require('mssql');
+          const bodyParser = require('body-parser');
+
+          const app = express();
+          const port = 3000;
+
+          // Configuration de la connexion à SQL Server
+          const config = {
+            user: 'votre_utilisateur',
+            password: 'votre_mot_de_passe',
+            server: 'votre_serveur', // Adresse du serveur SQL Server
+            database: 'votre_base_de_donnees',
+            options: {
+              encrypt: true, // Pour activer le chiffrement
+            },
+          };
+
+          // Utilisation de bodyParser pour traiter les requêtes POST avec des données JSON
+          app.use(bodyParser.json());
+
+          // Endpoint pour effectuer une recherche dans la base de données
+          app.get('/rechercher', async (req, res) => {
+            const searchTerm = req.query.q;
+
+            try {
+              // Établissement de la connexion à la base de données
+              await sql.connect(config);
+
+              // Exécution de la requête SQL pour rechercher des éléments
+              const result = await sql.query(`SELECT * FROM VotreTable WHERE VotreChamp LIKE '%${searchTerm}%'`);
+
+              if (result.recordset.length > 0) {
+                res.status(200).json(result.recordset);
+              } else {
+                res.status(404).send('Aucune correspondance trouvée.');
+              }
+            } catch (error) {
+              console.error(error);
+              res.status(500).send('Erreur lors de la recherche.');
+            } finally {
+              // Fermeture de la connexion à la base de données
+              await sql.close();
+            }
+          });
+
+          // Démarrage du serveur
+          app.listen(port, () => {
+            console.log(`Serveur en cours d'exécution sur le port ${port}`);
+          });
+
            <input type="text" placeholder="Search...">
           <span class="icon">
             <i class="fa-solid fa-magnifying-glass"></i>

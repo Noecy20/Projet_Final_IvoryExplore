@@ -60,7 +60,7 @@
                 </li>
             </ul>
             <span class="nomResto1">{{row[4]}}</span>
-            <h4><a href="{{row[2]}}">voir emplacement de l'hotel</a> </h4>
+            <h4><a href="{{ url_for('vue_hotel', latitude=row[2], longitude=row[3]) }}">voir emplacement de l'hotel</a> </h4>
 
         </div>
         {% endfor %}

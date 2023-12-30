@@ -2,22 +2,29 @@ from flask import Flask, render_template, url_for, request, redirect, flash, ses
 import pyodbc
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
+import folium
 
 app = Flask(__name__)
 
     # Initialisation de l'extension Flask-WTF
 
 
-# app.config['SECRET_KEY'] ='clés_flash'
+app.config['SECRET_KEY'] ='clés_flash'
 # DRIVER_NAME = 'SQL SERVER'
 # SERVER_NAME = 'DESKTOP-02KB7J2'
 # DATABASE_NAME = 'ivoryExplore'
 
-app.config['SQL_SERVER_CONNECTION_STRING'] = """
-    Driver={SQL Server};
-    Server=DESKTOP-K074SIS\SQLEXPRESS;
-    Database=IvoryExplore;
-    Trusted_Connection=yes;"""
+# app.config['SQL_SERVER_CONNECTION_STRING'] = """
+#     Driver={SQL Server};
+#     Server=Geek_Machine\SQLEXPRESS;
+#     Database=IvoryExplore;
+#     Trusted_Connection=yes;"""
+connection_string = (
+    "Driver={ODBC Driver 17 for SQL Server};"
+    "Server=Geek_Machine\SQLEXPRESS;"
+    "Database=ivoryExplore;"
+    "Trusted_Connection=yes"
+)
 
 
 
@@ -63,7 +70,7 @@ def inscription():
             conn = pyodbc.connect(connection_string)
             cursor = conn.cursor()
             c = cursor.execute('''
-                INSERT INTO users (nom_user,prenom_user, username, email, Passwords)
+                INSERT INTO users (nom_user,prenom_user, username, email, passwords)
                 VALUES ( ?, ?, ?, ?, ?)
              ''', (nom_user,prenom_user,username, email, hashed_password))
         
@@ -77,7 +84,6 @@ def inscription():
                 INSERT INTO nco (id_user,nombre_connexion)
                 VALUES (?, ?)
              ''', (i.id, 0))
-
             
             conn.commit()
             conn.close()

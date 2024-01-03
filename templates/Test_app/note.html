@@ -1,0 +1,39 @@
+<!-- templates/note.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes et Étoiles</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/style_note.css')}}">
+</head>
+<body>
+    <div id="app">
+        <div id="hotelList">
+            {% for item in notes %}
+                <div class="rating">
+                    <p>{{ item['etablissement'] }}</p>
+                    {% for i in range(1, 6) %}
+                        <span>{% if i <= item['note'] %}★{% else %}☆{% endif %}</span>
+                    {% endfor %}
+                    <!-- Ajoutez cette balise pour afficher la note en bas -->
+                    <p class="note">Note : {{ item['note'] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <button onclick="actualiser()">Actualiser</button>
+
+        <script>
+            var initialHotels = {{ notes | tojson | safe }};
+
+            function actualiser() {
+                // Utilisez location.reload() pour actualiser la page
+                location.reload(true);
+            }
+
+            // Appeler la fonction actualiser lorsque le bouton est cliqué
+            document.querySelector('button').addEventListener('click', actualiser);
+        </script>
+    </div>
+</body>
+</html>

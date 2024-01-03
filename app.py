@@ -3,6 +3,9 @@ import pyodbc
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
 import folium
+import pandas as pd
+import random
+import os
 
 app = Flask(__name__)
 
@@ -220,23 +223,32 @@ def modif_preference():
 @app.route('/Accueil')
 def accueil():
     if 'loggedin' in session:
-     conn = pyodbc.connect(connection_string)  # Connect to the database
-     try:
-         with conn.cursor() as cursor:
-            
-            cursor.execute('SELECT interests FROM preference WHERE id_user = ?', (session['Id'],))
-            data = cursor.fetchone()
-            
-            if any(keyword in data[0] for keyword in ["hotel class", "hotel chic"]):
-                cursor.execute('SELECT TOP 4 * FROM hotel')
-                data_h = cursor.fetchall()
-                return render_template("accueil.html", data_h=data_h)
-            else:
-                return render_template("accueil.html", data_h=None)
-     finally:
-        conn.close()  
+        conn = pyodbc.connect(connection_string)
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute('SELECT interests FROM preference WHERE id_user = ?', (session['Id'],))
+                data = cursor.fetchone()
+
+                if any(keyword in data[0] for keyword in ["hotel class", "hotel chic"]):
+                    cursor.execute('SELECT TOP 4 * FROM hotel')
+                    data_h = cursor.fetchall()
+
+                    # Charger les données depuis le fichier CSV avec Pandas
+                    data_note = pd.read_csv('csv/note.csv')
+
+                    # Convertir la Series en une liste de dictionnaires
+                    notes_list = [{"etablissement": etablissement, "note": note} for etablissement, note in zip(data_note["Nom de l'etablissement"], data_note["Note"])]
+
+                    # Mélanger la liste de manière aléatoire
+                    random.shuffle(notes_list)
+
+                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10])
+                else:
+                    return render_template("accueil.html", data_h=None, notes=None)
+        finally:
+            conn.close()
     else:
-     return redirect(url_for('connexion'))              
+        return redirect(url_for('connexion'))          
 
     #code de trie et d'affichage 
    
@@ -372,6 +384,26 @@ def restaurant():
     else:
         return redirect(url_for('connexion'))
 # FIN DE LA PAGE RESTAURANTS
+
+############# TEST_NOTE ##############
+@app.route('/note')
+def note():
+    # Charger les données depuis le fichier CSV avec Pandas
+    data = pd.read_csv('csv/note.csv')
+
+    # Convertir la Series en une liste de dictionnaires
+    notes_list = [{"etablissement": etablissement, "note": note} for etablissement, note in zip(data["Nom de l'etablissement"], data["Note"])]
+
+    # Mélanger la liste de manière aléatoire
+    random.shuffle(notes_list)
+
+    return render_template('Test_app/note.html', notes=notes_list[:10])
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

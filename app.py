@@ -2,7 +2,8 @@ from flask import Flask, render_template, url_for, request, redirect, flash, ses
 import pyodbc
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
-import folium
+import folium 
+from folium.plugins import MarkerCluster
 import pandas as pd
 import random
 import os
@@ -24,7 +25,7 @@ app.config['SECRET_KEY'] ='clés_flash'
 #     Trusted_Connection=yes;"""
 connection_string = (
     "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=Geek_Machine\SQLEXPRESS;"
+    "Server=DESKTOP-T61GK5V\SQLEXPRESS01;"
     "Database=ivoryExplore;"
     "Trusted_Connection=yes"
 )
@@ -234,10 +235,11 @@ def accueil():
                     data_h = cursor.fetchall()
 
                     # Charger les données depuis le fichier CSV avec Pandas
-                    data_note = pd.read_csv('csv/note.csv')
+                    data_note = pd.read_csv('csv/NoteHot.csv',  sep=';')
 
                     # Convertir la Series en une liste de dictionnaires
-                    notes_list = [{"etablissement": etablissement, "note": note} for etablissement, note in zip(data_note["Nom de l'etablissement"], data_note["Note"])]
+                    #notes_list = [{"etablissement": etablissement, "note": note} for etablissement, note in zip(data_note["Nom de l'etablissement"], data_note["Note"])]
+                    notes_list = [{"etablissement": etablissement, "note": note, "image": image_link} for etablissement, note, image_link in zip(data_note["Nom de l'etablissement"], data_note["Note"], data_note["liens"])]
 
                     # Mélanger la liste de manière aléatoire
                     random.shuffle(notes_list)

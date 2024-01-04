@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recupération de votre mot de passe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .section_connexion_page_container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            height: 300px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+        label {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 90%;
+
+        }
+        input::placeholder {
+        color: #888; /* Couleur du texte du placeholder */
+        font-size: 16px;
+        }
+
+
+        .page_conx_btn_valid {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 96%;
+            font-size: 15px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Ajout de styles pour le message flash */
+        #flash-message {
+            margin-top: 10px;
+            text-align: center;
+            padding: 8px;
+            background-color: #6ebca8;
+            color: #fff;
+            border-radius: 4px;
+        }
+        .return-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .return-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .return-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<section class="section_connexion_page">
+    <main class="section_connexion_page_container">
+        <div class="section_connexion_page_container1">
+            {% with messages=get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{category}}" id="flash-message"> {{message}} </div>
+                    {%endfor%}
+                {%endif%}
+            {% endwith %}
+            
+            <div class="form_titr_page_connex"><h2>Récupération de mot de passe<h3></div>
+                
+            <form method="POST" action="/mot_de_passe_oublie_traitement">
+                <div class="connx_page_login1">
+                    <input type="email" name="Email" class="inp_page_connex" placeholder="Entrez votre adresse mail ici svp" id="nom_utilisateur" required>
+                </div>
+                <div class="page_conx_btn_valid">
+                    <button type="submit">VALIDER</button>
+                </div>
+                <div class="return-link">
+                    <a href="{{ url_for('connexion') }}">Retour à la page de connexion</a>
+                </div>
+            </form><br>
+        </div>
+    </main>
+</section>
+
+<!-- Ajoutez le script JavaScript pour gérer la disparition du message -->
+<script>
+    // Sélectionnez l'élément contenant le message flash
+    const flashMessage = document.getElementById('flash-message');
+    
+    // Définissez un délai (en millisecondes) avant que le message ne disparaisse
+    const delay = 5000; // 5 secondes
+    
+    // Utilisez setTimeout pour masquer le message après le délai
+    setTimeout(function() {
+        flashMessage.style.display = 'none';
+    }, delay);
+</script>
+
+</body>
+</html>

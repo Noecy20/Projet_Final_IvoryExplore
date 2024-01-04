@@ -7,6 +7,9 @@ from folium.plugins import MarkerCluster
 import pandas as pd
 import random
 import os
+import bcrypt
+# from flask_mail import Mail, Message
+# import secrets  # Pour générer des tokens sécurisés
 
 app = Flask(__name__)
 
@@ -98,18 +101,20 @@ def inscription():
 
 # DEBUT DE LA PAGE CONNEXION
 #ROUTE ==> LA PAGE CONNEXION
+
 @app.route('/Connexion',methods=["GET", "POST"])
 def connexion():
     if request.method == 'POST':
-        email = request.form["email"]
+        email = request.form["email"]  # Utilisateur peut saisir l'e-mail ou le nom d'utilisateur
         passwords = request.form["passwords"]
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email))
+        cursor.execute('SELECT * FROM users WHERE email = ? OR username = ?', (email, email))
         users = cursor.fetchone()
         if users:
             user_pswd = users[5]
-            if check_password_hash(user_pswd, passwords):
+            if bcrypt.checkpw(passwords.encode('utf-8'), user_pswd.encode('utf-8')):
+
                 session['loggedin'] = True
                 session['Id'] = users[0]
                 session['username'] = users[1]
@@ -123,7 +128,7 @@ def connexion():
                 conn.commit()
                 conn.close()
 
-                if compte == 1:
+                if compte >= 1:
                     return redirect(url_for('preference'))
                 else:
                     return redirect(url_for('accueil'))
@@ -136,6 +141,69 @@ def connexion():
     
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
+
+#DEBUT MOT DE PASSE OUBLIE ET RECUPERATION
+
+# Route du mot de passe oublié
+
+
+@app.route('/mot_de_passe_oublie')
+def mot_de_passe_oublie():
+    return render_template('user_connect/mot_de_passe_oublie.html')
+
+@app.route('/mot_de_passe_oublie_traitement', methods=['POST'])
+def mot_de_passe_oublie_traitement():
+    if request.method == 'POST':
+        email = request.form['Email']
+        
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        
+        # Récupérer les résultats de la requête
+        result = cursor.fetchone()
+
+        cursor.close()
+
+        if result:
+#             # Si l'e-mail existe, rediriger vers la page de réinitialisation avec l'ID associé
+            # flash('E-mail trouvé. Redirection vers la page "/grace".')
+            return redirect(url_for('réinitialiser', user_id=result[0]))
+        else:
+            # Si l'e-mail n'existe pas, afficher un message d'erreur
+            flash('E-mail non trouvé. Veuillez réessayer.', 'danger')
+            return redirect(url_for('mot_de_passe_oublie'))  # Assurez-vous d'ajuster la route de redirection
+
+    # Si la requête n'est pas POST ou si l'e-mail n'existe pas, rester sur la même page
+    return render_template("user_connect/mot_de_passe_oublie.html")  # Assurez-vous d'ajuster le nom du template
+
+@app.route('/réinitialiser/<int:user_id>')
+def réinitialiser(user_id):
+    # Traitez l'ID de l'utilisateur comme nécessaire dans cette route
+    return render_template('user_connect/réinitialiser.html', user_id=user_id)
+
+@app.route("/réinitialiser_traitement/<int:user_id>",  methods=["GET", "POST"])
+def réinitialiser_traitement(user_id):
+    if request.method == 'POST':
+        mot_de_passe = request.form["mot_de_passe"]
+        
+        #mot_de_passe_hache = bcrypt.generate_password_hash(mot_de_passe).decode('utf-8')
+        # Génération du sel (salt)
+        salt = bcrypt.gensalt()
+        # Hachage du mot de passe avec le sel
+        mot_de_passe_hache = bcrypt.hashpw(mot_de_passe.encode('utf-8'), salt).decode('utf-8')
+        
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute(f"UPDATE users SET passwords = ? WHERE id = ?", (mot_de_passe_hache, user_id))
+        conn.commit()
+        
+        flash('Modification réussie! Connectez-vous maintenant.', 'success')
+    
+    return render_template('user_connect/connexion.html')
+
+#FIN MOT DE PASSE OUBLIE ET RECUPERATION
+
 
 #debut de la deconnexion
 @app.route('/Deconnexion')

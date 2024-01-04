@@ -945,7 +945,7 @@
             /* Style personnalisé pour le texte sous l'image */
             .carousel-container {
                 text-align: center;
-                padding: 20px;
+                padding: 10px;
             }
             .carousel-container img {
                 width: 100%;
@@ -970,33 +970,57 @@
               border-radius: 5px; /* Ajoutez des coins arrondis */
               cursor: pointer; /* Curseur de la souris au survol */
             }
-            .carousel-container img {
-                width: 100%; /* La largeur de l'image sera de 100% de la largeur de son conteneur */
-                height: auto; /* La hauteur sera ajustée automatiquement pour maintenir les proportions de l'image */
-                max-height: 200px; /* Vous pouvez ajuster cette valeur pour fixer une hauteur maximale */
-                object-fit: contain center; /* L'image sera ajustée pour couvrir complètement le conteneur */
+            .carou{
+              /*border: 2px solid red;*/
+              height: 600px;
+              width: 100%;
             }
+            .carousel{
+              /*border: 2px solid blue;*/
+              height: 100%;
+              width: 100%;
+            }
+            .carousel-container{
+              /*border: 2px solid green;*/
+              height: 100%;
+              width: 100%; 
+            }
+            .imagecarou{
+              /*border: 2px solid magenta;*/
+              height: 350px;
+              width: 100%;
+            }
+            .imagecarou img{
+              height: 100%;
+              width: 100%;
+              object-fit: contain center;
+            }
+            
+            
 
         </style>
     </head>
     <body>
           <div style="margin-bottom: 40px; margin-top: 40px" class="btn_actualiser"><button class="actualiser-button" onclick="actualiserPage()">Actualiser</button></div>
-          <div class="carousel">
-          
-
+          <!-- Carousel des images des hôtels en fonction des preferences hotel de l'users-->
+          <div class="carou">
+            <div class="carousel">
               {% for notes_list in notes %}
-                  <div class="carousel-container">
-                      <img src="{{ notes_list['image'] }}" alt="{{ notes_list['alt'] }}">
-                      <div class="rating">
-                          <p style="font-size: 25px; font-weight: bold; margin-top: 10px">{{ notes_list['etablissement'] }}</p>
-                          {% for i in range(1, 6) %}
-                              <span style="font-size: 40px; color: rgb(248, 206, 70);">{% if i <= notes_list['note'] %}★{% else %}☆{% endif %}</span>
-                          {% endfor %}
-                          <!-- Ajoutez cette balise pour afficher la note en bas -->
-                          <p class="note">Note : {{ notes_list['note'] }}</p>
-                      </div>
+                <div class="carousel-container">
+                  <div class="imagecarou">
+                    <img src="{{ notes_list['image'] }}" alt="{{ notes_list['alt'] }}">
                   </div>
+                  <div class="rating">
+                    <p style="font-size: 25px; font-weight: bold; margin-top: 10px">{{ notes_list['etablissement'] }}</p>
+                    {% for i in range(1, 6) %}
+                        <span style="font-size: 40px; color: rgb(248, 206, 70);">{% if i <= notes_list['note'] %}★{% else %}☆{% endif %}</span>
+                    {% endfor %}
+                    <!-- Ajoutez cette balise pour afficher la note en bas -->
+                    <p class="note">Note : {{ notes_list['note'] }}</p>
+                  </div>
+                </div>
               {% endfor %}
+            </div>
           </div>
 
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -1007,7 +1031,7 @@
                       slidesToShow: 3,
                       slidesToScroll: 1,
                       autoplay: true,
-                      autoplaySpeed: 5000,
+                      autoplaySpeed: 3000,
                   });
               });
           </script>

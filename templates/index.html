@@ -1013,9 +1013,9 @@ footer{
    <img src="../../static/images/logo-removebg-preview.png"  alt="logo" width="50%">
   </div>
   <div class="nav-items">
+    <li><a href="#commentaire">Commentaire</a></li>
     <li><a href="#apropos">A propos</a></li>
     <li><a href="#contact">Contactez-nous</a></li>
-    <li><a href="#commentaire">Commentaire</a></li>
     <li><a href="{{url_for('connexion')}}">Se connecter</a></li>
   </div>
 
@@ -1023,10 +1023,6 @@ footer{
   <!-- PROFIL UTILISATEUR -->
 
   <div class="action">
-      <div class="profile" onclick="menuToggle();">
-          <img src="../static/images/profile.png" alt="">
-      </div>
-
       <div class="menu">
           <!-- <h3>
               <div>
@@ -1084,17 +1080,7 @@ footer{
 
   <!--   image-fond  -->
   <section>
-    <div class="img1">
-
-        <div class="search" >
-            <div class="input-box">
-          <input type="text" placeholder="Search...">
-          <span class="icon">
-            <i class="uil uil-search search-icon"></i>
-          </span>
-            <i class="uil uil-times close-icon"></i>
-        </div>
-    </div>
+    <div class="img1"></div>
 </section>
 
 <!-- fin image de fond -->
@@ -1104,16 +1090,17 @@ footer{
 <section class="hotel">
     <div class="texte">
         <h1>profitez d’un peu de temps</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus corporis architecto at illo corrupti doloremque eos odit voluptas, aut repudiandae, culpa sapiente assumenda blanditiis sed nulla consequatur reiciendis modi odio?</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus corporis
+           architecto at illo corrupti doloremque eos odit voluptas, aut repudiandae,
+            culpa sapiente assumenda blanditiis sed nulla consequatur reiciendis modi odio?</p><br>
 
         <div class="rating-box">
-            <h1>How was your experience?</h1>
             <div class="stars">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+              <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+              <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+              <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+              <i class="fa-solid fa-star" style="color:#FFD700;"></i>
             </div>
           </div>
     </div>
@@ -1134,21 +1121,18 @@ footer{
         </div>
         <div class="texte">
             <h1>une éducation de qualité</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus aperiam debitis ullam et molestias similique vero eius, mollitia optio illo.</p>
-                <h1>How was your experience?</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+              Necessitatibus aperiam debitis ullam et molestias similique 
+              vero eius, mollitia optio illo.</p><br>
                 <div class="center">
-                  <div class="stars">
-                    <input type="radio" id="five" name="rate" value="5">
-                    <label for="five"></label>
-                    <input type="radio" id="four" name="rate" value="4">
-                    <label for="four"></label>
-                    <input type="radio" id="three" name="rate" value="3">
-                    <label for="three"></label>
-                    <input type="radio" id="two" name="rate" value="2">
-                    <label for="two"></label>
-                    <input type="radio" id="one" name="rate" value="1">
-                    <label for="one"></label>
-                    <span class="result"></span>
+                  <div class="rating-box">
+                    <div class="stars">
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                    </div>
                   </div>
                </div>
           </div>
@@ -1161,17 +1145,17 @@ footer{
     <section class="film">
       <div class="texte">
         <h1>regardez le meilleur</h1>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus aperiam debitis ullam et molestias similique vero eius, mollitia optio illo.</p>
-           <h1>How was your experience?</h1>
-          <div class="rating-box">
-            <div class="stars">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-            </div>
-          </div>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+             Necessitatibus aperiam debitis ullam et molestias similique vero eius, mollitia optio illo.</p><br>
+                  <div class="rating-box">
+                    <div class="stars">
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                    </div>
+                  </div>
       </div>
 
       <div class="film-img">
@@ -1193,21 +1177,18 @@ footer{
 
   <div class="texte">
     <h1>mangeons avec appétit</h1>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus aperiam debitis ullam et molestias similique vero eius, mollitia optio illo.</p>
-      <h1>How was your experience?</h1>
-      <div class="stars">
-        <input type="radio" id="five" name="rate" value="5">
-        <label for="five"></label>
-        <input type="radio" id="four" name="rate" value="4">
-        <label for="four"></label>
-        <input type="radio" id="three" name="rate" value="3">
-        <label for="three"></label>
-        <input type="radio" id="two" name="rate" value="2">
-        <label for="two"></label>
-        <input type="radio" id="one" name="rate" value="1">
-        <label for="one"></label>
-        <span class="result"></span>
-      </div>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+         Necessitatibus aperiam debitis ullam et molestias
+          similique vero eius, mollitia optio illo.</p><br>
+                        <div class="rating-box">
+                    <div class="stars">
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                      <i class="fa-solid fa-star" style="color:#FFD700;"></i>
+                    </div>
+                  </div>
   </div>
 </section>
 <!-- fin bloc restaurant -->

@@ -28,7 +28,7 @@ app.config['SECRET_KEY'] ='clés_flash'
 #     Trusted_Connection=yes;"""
 connection_string = (
     "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=DESKTOP-T61GK5V\SQLEXPRESS01;"
+    "Server=Geek_Machine\SQLEXPRESS;"
     "Database=ivoryExplore;"
     "Trusted_Connection=yes"
 )
@@ -105,16 +105,15 @@ def inscription():
 @app.route('/Connexion',methods=["GET", "POST"])
 def connexion():
     if request.method == 'POST':
-        email = request.form["email"]  # Utilisateur peut saisir l'e-mail ou le nom d'utilisateur
+        email = request.form["email"]
         passwords = request.form["passwords"]
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ? OR username = ?', (email, email))
+        cursor.execute('SELECT * FROM users WHERE email = ?', (email))
         users = cursor.fetchone()
         if users:
             user_pswd = users[5]
-            if bcrypt.checkpw(passwords.encode('utf-8'), user_pswd.encode('utf-8')):
-
+            if check_password_hash(user_pswd, passwords):
                 session['loggedin'] = True
                 session['Id'] = users[0]
                 session['username'] = users[1]
@@ -128,7 +127,7 @@ def connexion():
                 conn.commit()
                 conn.close()
 
-                if compte >= 1:
+                if compte == 1:
                     return redirect(url_for('preference'))
                 else:
                     return redirect(url_for('accueil'))

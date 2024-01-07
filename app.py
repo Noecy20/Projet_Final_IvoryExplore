@@ -294,6 +294,8 @@ def accueil():
         conn = pyodbc.connect(connection_string)
         try:
             with conn.cursor() as cursor:
+                cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+                user_data = cursor.fetchone()
                 cursor.execute('SELECT interests FROM preference WHERE id_user = ?', (session['Id'],))
                 data = cursor.fetchone()
 
@@ -311,9 +313,9 @@ def accueil():
                     # Mélanger la liste de manière aléatoire
                     random.shuffle(notes_list)
 
-                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10])
+                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10],user_data=user_data)
                 else:
-                    return render_template("accueil.html", data_h=None, notes=None)
+                    return render_template("accueil.html", data_h=None, notes=None,user_data=user_data)
         finally:
             conn.close()
     else:

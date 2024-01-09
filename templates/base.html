@@ -28,9 +28,9 @@
 <body>
  {%include './partial/navbar.html'%}
 
-        {%block centre%}
+{%block centre%}
 
-        {%endblock centre%}
+{%endblock centre%}
 </body>
 <!-- Start of ChatBot (www.chatbot.com) code -->
 <script type="text/javascript">
@@ -46,4 +46,30 @@
         rel="noopener nofollow">enable JavaScript</a> in order to use the AI chatbot tool powered by <a
         href="https://www.chatbot.com/" rel="noopener nofollow" target="_blank">ChatBot</a></noscript>
 <!-- End of ChatBot code -->
+
+     <!-- Ajoutez vos balises script à la fin du corps du document -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+        // Script pour le carrousel
+        $(document).ready(function () {
+            $('.carousel').slick({
+                slidesToShow: 3,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 5000,
+            });
+        });
+
+        // Fonction pour actualiser la page
+        function actualiserPage() {
+            location.reload();
+        }
+
+        // Fonction pour faire apparaître le profil utilisateur
+        function menuToggle() {
+            const toggleMenu = document.querySelector('.action .menu');
+            toggleMenu.classList.toggle('active');
+        }
+    </script>
 </html>

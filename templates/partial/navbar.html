@@ -1,73 +1,75 @@
 <nav>
-  <div class="menu-icon">
-    <span class="fas fa-bars"></span>
-  </div>
-  <div class="logo">
-    <img src="../../static/images/logo-removebg-preview.png" alt="logo" width="50%">
-  </div>
-  <div class="nav-items">
-    <li><a href="{{url_for('accueil')}}">Accueil</a></li>
-    <li><a href="{{url_for('hotel')}}">Hôtel</a></li>
-    <li><a href="{{url_for('restaurant')}}">Restaurant</a></li>
-    <li><a href="{{url_for('film')}}">Film</a></li>
-    <li><a href="{{url_for('ecole')}}">Ecole</a></li>
-  </div>
-
-
-  <!-- PROFIL UTILISATEUR -->
-
-  <div class="action">
-    <div class="profile" onclick="menuToggle();">
-      <img src="../static/images/profile.png" alt="">
-    </div>
-    <div class="menu">
-      <h3>
-        <div>
-          <i class="fa-regular fa-bell"></i> Notification
-        </div>
-      </h3>
-
-      <div class="user-img">
-        <img src="../static/images/profile.png" width="30%" id="photo">
-        <input type="file" id="file">
-        <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
+      <div class="menu-icon">
+        <span class="fas fa-bars"></span>
       </div>
-      <ul>
-        <li class="identifiant">
-          <a href="#">Kouakou jean</a>
-          <a href="#">kouakoujean@gmail.com</a>
-        </li>
-        <li>
-          <i class="fa-regular fa-pen-to-square"></i>
-          <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
-          <br>
-          <i class="fa-solid fa-circle-user"></i>
-          <a href="#">Modifier Mon Compte</a>
-        </li>
-        <li>
-          <h5>Contactez-nous</h5>
-          <i class="fa-brands fa-whatsapp"></i>
-          <a href="#">+2250707070707</a>
-          <br>
-          <i class="fa-brands fa-instagram"></i>
-          <a href="#">IvoryExplore</a>
-          <br>
-          <i class="fa-solid fa-envelope"></i>
-          <a href="#">IvoryExplore@gmail.com</a>
+      <div class="logo">
+      <img src="../../static/images/logo-removebg-preview.png"  alt="logo" width="50%">
+      </div>
+      <div class="nav-items">
+        <li><a href="/Accueil_hotel">Accueil</a></li>
+        <li><a href="{{url_for('hotel')}}">Hôtel</a></li>
+        <li><a href="{{url_for('restaurant')}}">Restaurant</a></li>
+        <li><a href="{{url_for('film')}}">Film</a></li>
+        <li><a href="{{url_for('ecole')}}">Ecole</a></li>
+        <input type="text" placeholder="Search..." style ="padding-left:10px; width:40%;">
 
-        </li>
-        <li>
-          <i class="fa-solid fa-right-from-bracket"></i>
-          <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
-          <br>
-          <i class="fa-solid fa-trash-can"></i>
-          <a href="#">Supprimer</a>
-        </li>
+      </div>
 
-      </ul>
-    </div>
-  </div>
-  <div class="cancel-icon">
-    <span class="fas fa-times"></span>
-  </div>
-</nav>
+
+      <!-- PROFIL UTILISATEUR -->
+
+      <div class="action">
+        <div class="profile" onclick="menuToggle();">
+            <img src="../static/images/profile.png" alt="">
+        </div>
+        <div class="menu">
+            <h3>
+                <div>
+                  <i class="fa-regular fa-bell"></i> Notification
+                </div>
+            </h3>
+
+            <div class="user-img">
+              <img src="../static/images/profile.png" width="30%" id="photo">
+              <input type="file" id="file">
+              <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
+            </div>
+            <ul>
+                <li class="identifiant">
+                    <a href="#">{{user_data.nom_user}} {{user_data.prenom_user}}</a>
+                    <a href="#">{{user_data.email}}</a>
+                </li>
+                <li>
+                  <i class="fa-regular fa-pen-to-square"></i>
+                    <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
+                    <br>
+                    <i class="fa-solid fa-circle-user"></i>
+                    <a href="#">Modifier Mon Compte</a>
+                </li>
+                <li>
+                  <h5>Contactez-nous</h5>
+                  <i class="fa-brands fa-whatsapp"></i>
+                    <a href="#">+2250707070707</a>
+                    <br>
+                    <i class="fa-brands fa-instagram"></i>
+                    <a href="#">IvoryExplore</a>
+                  <br>
+                  <i class="fa-solid fa-envelope"></i>
+                    <a href="#">IvoryExplore@gmail.com</a>
+
+                </li>
+                <li>
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                    <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
+                    <br>
+                    <i class="fa-solid fa-trash-can"></i>
+                    <a href="#">Supprimer</a>
+                </li>
+
+            </ul>
+        </div>
+      </div>
+      <div class="cancel-icon">
+        <span class="fas fa-times"></span>
+      </div>
+    </nav>

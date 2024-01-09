@@ -288,8 +288,8 @@ def modif_preference():
 # DEBUT DE LA PAGE ACCCUEIL
 #ROUTE ==> LA PAGE ACCUEIL
      
-@app.route('/Accueil')
-def accueil():
+@app.route('/Accueil_hotel')
+def accueil_hotel():
     if 'loggedin' in session:
         conn = pyodbc.connect(connection_string)
         try:
@@ -313,9 +313,9 @@ def accueil():
                     # Mélanger la liste de manière aléatoire
                     random.shuffle(notes_list)
 
-                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10],user_data=user_data)
+                    return render_template("partial/accueil_hotel.html", data_h=data_h, notes=notes_list[:10],user_data=user_data)
                 else:
-                    return render_template("accueil.html", data_h=None, notes=None,user_data=user_data)
+                    return render_template("partial/accueil_hotel", data_h=None, notes=None,user_data=user_data)
         finally:
             conn.close()
     else:

@@ -19,8 +19,12 @@
 }
 
 body{
-    background-image: url("../static/images/images/img-preference.jpg")
+    height: 100vh;
+    /* background-image: url("../static/images/images/img-preference.jpg"); */
+    background: url("../static/images/images/img-preference.jpg") center center no-repeat;
+    background-size: cover;
 }
+
 
 
 body h1{
@@ -30,45 +34,66 @@ body h1{
     margin-top: 10px;
 }
 
-.buttons{
-    /*border: 2px solid red;*/
+.buttons {
+    /* border: 2px solid red; */
     width: 100%;
-    height: 150px;
+    height: 60px;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
+    margin-top: 70px;
 }
 
-.buttons a {
-text-decoration: none;
-color: black;
-font-size: 1rem;
-padding: 15px 0;
-transition: 0.2s ease;
+.buttons .btnretour{
+    height: 100%;
+    width: 10%;
+    border: 2px solid #066D84;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    border-radius: 8px;    
 }
-.buttons .signin {
-padding: 15px 45px;
-text-align: center;
-border-radius: 0.375rem;
-border: 1px solid black;
-margin-right: 30px;
+.buttons .btnretour button, .buttons .btnpref input{
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    
 }
-.buttons .signin:hover {
-color: white;
-background-color: red;
+
+.buttons .btnretour button a{
+    text-decoration: none;
+    color: black;
 }
-.buttons .signup {
-border: 1px solid black;
-padding: 15px 45px;
-border-radius: 0.375rem;
-text-align: center;
-transition: 0.2s ease;
+.buttons .btnretour:hover{
+    background-color: #8ef48ea4;
 }
-.buttons .signup:hover {
-color: white;
-background-color: red;
+.buttons .btnpref{
+    height: 100%;
+    width: 10%;
+    /* border: 2px solid yellow; */
+    border: 2px solid #066D84;
+    font-size: 24px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
+.buttons .btnpref:hover {
+    background-color: #f55959a4;
+}
+
 
 
 /*casses à cocher*/
@@ -263,11 +288,13 @@ background-color: red;
 
     <!-- case de préférence à cocher -->
 
-
-
     <div class="buttons">
-        <a href="{{url_for('inscription')}}" class="signin">Retour</a>
-        <input type="submit" class="signup" value="Suivant">
+        <div class="btnretour">
+            <button><a href="{{url_for('inscription')}}">Retour</a></button>
+        </div>
+        <div class="btnpref">
+            <input type="submit" value="Suivant">
+        </div>
     </div>
     </form>
 </body>

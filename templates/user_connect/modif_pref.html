@@ -1,275 +1,119 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{{ url_for('static', filename='logo-removebg-preview.ico') }}" type="image/png">
-    <title>choisi tes préférences</title>
-</head>
+{%extends "./base.html"%}
 
-<style>
+{%block centre%}
 
-    @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-body{
-    background-image: url("../static/images/images/img-preference.jpg")
-}
+<section class="Modif_prefe">
+    <form method="post">
+        <h1>Modifier vos habitudes</h1>
+        <div class="container">
+            <div>
+                <label>
+                    <input type="checkbox" value="Romance" name="option[]">
+                    <span>Romance</span>
+                </label>
+            </div>
 
 
-body h1{
-    font-size: 2.5rem;
-    color: #fff;
-    text-align: center;
-    margin-top: 10px;
-}
+            <div>
+                <label>
+                    <input type="checkbox" value="Drame" name="option[]">
+                    <span>Drame</span>
+                </label>
+            </div>
 
-.buttons{
-    /*border: 2px solid red;*/
-    width: 100%;
-    height: 150px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-.buttons a {
-text-decoration: none;
-color: black;
-font-size: 1rem;
-padding: 15px 0;
-transition: 0.2s ease;
-}
-.buttons .signin {
-padding: 15px 45px;
-text-align: center;
-border-radius: 0.375rem;
-border: 1px solid black;
-margin-right: 30px;
-}
-.buttons .signin:hover {
-color: white;
-background-color: red;
-}
-.buttons .signup {
-border: 1px solid black;
-padding: 15px 45px;
-border-radius: 0.375rem;
-text-align: center;
-transition: 0.2s ease;
-}
-.buttons .signup:hover {
-color: white;
-background-color: red;
-}
+            <div>
+                <label>
+                    <input type="checkbox" value="Plats Préférés" name="option[]">
+                    <span>Plats Préférés</span>
+                </label>
+            </div>
 
 
-/*casses à cocher*/
-
-.container{
-    /*background: #222;*/
-    display: flex;
-    margin: 0 auto;
-    justify-content: center;
-    align-items: center;
-    /*min-height: 1200vh;*/
-    flex-wrap: wrap;
-    margin-top: 80px;
-    /*background:#222 ;*/
-}
+            <div>
+                <label>
+                    <input type="checkbox" value="Science-Fiction" name="option[]">
+                    <span>Science-Fiction</span>
+                </label>
+            </div>
 
 
-.container div{
-    margin: 10px;
-}
+            <div>
+                <label>
+                    <input type="checkbox" value="Coûts Moyen" name="option[]">
+                    <span>Coûts Moyen</span>
+                </label>
+            </div>
 
 
-.container div label{
-    cursor: pointer;
-}
-
-.container div label input{
-    display: none;
-}
-
-.container div label span{
-    position: relative;
-    display: inline-block;
-    background: #424242;
-    padding:15px 30px ;
-    color: #fff;
-    text-shadow: 0 1px 4px rgb(0, 0,.5 blue);
-    border-radius: 30px;
-    font-size:20px ;
-    transition: 0.5s;
-    user-select: none;
-    overflow: hidden;
-}
+            <div>
+                <label>
+                    <input type="checkbox" value="Ecole" name="option[]">
+                    <span>Ecole</span>
+                </label>
+            </div>
 
 
-.container div label span:before{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    background-color: rgb(225, 225, 225,.1);
-}
+            <div>
+                <label>
+                    <input type="checkbox" value="Film Horreur" name="option[]">
+                    <span>Film Horreur</span>
+                </label>
+            </div>
 
+            <div>
+                <label>
+                    <input type="checkbox" value="Hôtel 5 Etoiles" name="option[]">
+                    <span>Hôtel 5 Etoiles</span>
+                </label>
 
-.container div:nth-child(6n + 1) label input:checked~span{
-    background-color: #e91e63;
-    color: #fff;
-    box-shadow: 0 2px 20px  #e91e63;
-}
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" value="Film Action" name="option[]">
+                    <span>Film Action</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" value="Hotel chic" name="option[]">
+                    <span>hotel class</span>
+                </label>
+            </div>
 
+            <div>
+                <label>
+                    <input type="checkbox" value="Hotel chic" name="option[]">
+                    <span>Bonne Nourriture</span>
+                </label>
+            </div>
 
-
-.container div:nth-child(6n + 2) label input:checked~span{
-    background-color: #0f0;
-    color: #fff;
-    box-shadow: 0 2px 20px  #0f0;
-}
-
-.container div:nth-child(6n + 3) label input:checked~span{
-    background-color: #df01d7;
-    color: #fff;
-    box-shadow: 0 2px 20px  #df01d7;
-}
-
-
-.container div:nth-child(6n + 4) label input:checked~span{
-    background-color: #2e2efe;
-    color: #fff;
-    box-shadow: 0 2px 20px  #2e2efe;
-}
-
-.container div:nth-child(6n + 5) label input:checked~span{
-    background-color: #ffeb3b;
-    color: #fff;
-    box-shadow: 0 2px 20px  #ffeb3b;
-}
-
-
-.container div:nth-child(6n + 6) label input:checked~span{
-    background-color: #9c27b0;
-    color: #fff;
-    box-shadow: 0 2px 20px  #9c27b0;
-}
-
-</style>
-<body>
-
-
-
-    <form  method="post">
-        <h1>Modifier vos habitude</h1>
-    <div class="container" >
-        <div>
-            <label>
-                <input type="checkbox" value="Romance" name="option[]">
-                <span>Romance</span>
-            </label>
+            <div>
+                <label>
+                    <input type="checkbox" value="Hotel chic" name="option[]">
+                    <span>Hotel chic</span>
+                </label>
+            </div>
         </div>
 
+        <!-- case de préférence à cocher -->
 
-        <div>
-            <label>
-                <input type="checkbox" value="Drame" name="option[]">
-                <span>Drame</span>
-            </label>
+
+
+        <!-- <div class="buttons">
+            <a href="{{url_for('accueil')}}" class="signin">Retour</a>
+            <input type="submit" class="signup" value="Suivant">
+        </div> -->
+        <div class="buttons">
+            <div class="btnretour">
+                <button><a href="{{url_for('accueil')}}">Retour</a></button>
+            </div>
+            <div class="btnmofipref">
+              <input type="submit"  value="Suivant">
+            </div>
         </div>
-
-        <div>
-            <label>
-                <input type="checkbox" value="Plats Préférés" name="option[]">
-                <span>Plats Préférés</span>
-            </label>
-        </div>
-
-
-        <div>
-            <label>
-                <input type="checkbox" value="Science-Fiction" name="option[]">
-                <span>Science-Fiction</span>
-            </label>
-        </div>
-
-
-        <div>
-            <label>
-                <input type="checkbox" value="Coûts Moyen" name="option[]">
-                <span>Coûts Moyen</span>
-            </label>
-        </div>
-
-
-        <div>
-            <label>
-                <input type="checkbox" value="Ecole" name="option[]">
-                <span>Ecole</span>
-            </label>
-        </div>
-
-
-        <div>
-            <label>
-                <input type="checkbox" value="Film Horreur" name="option[]">
-                <span>Film Horreur</span>
-            </label>
-        </div>
-
-        <div>
-            <label>
-                <input type="checkbox" value="Hôtel 5 Etoiles" name="option[]">
-                <span>Hôtel 5 Etoiles</span>
-            </label>
-
-        </div>
-        <div>
-            <label>
-                <input type="checkbox" value="Film Action" name="option[]">
-                <span>Film Action</span>
-            </label>
-        </div>
-        <div>
-            <label>
-                <input type="checkbox" value="Hotel chic" name="option[]">
-                <span>hotel class</span>
-            </label>
-        </div>
-
-        <div>
-            <label>
-                <input type="checkbox" value="Hotel chic" name="option[]">
-                <span>Bonne Nourriture</span>
-            </label>
-        </div>
-
-        <div>
-            <label>
-                <input type="checkbox" value="Hotel chic" name="option[]">
-                <span>Hotel chic</span>
-            </label>
-        </div>
-    </div>
-
-    <!-- case de préférence à cocher -->
-
-
-
-    <div class="buttons">
-        <a href="{{url_for('accueil')}}" class="signin">Retour</a>
-        <input type="submit" class="signup" value="Suivant">
-    </div>
     </form>
-</body>
-</html>
+</section>
+
+
+{%endblock centre%}
+ 

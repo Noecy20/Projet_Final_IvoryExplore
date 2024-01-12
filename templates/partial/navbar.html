@@ -1,75 +1,142 @@
 <nav>
-      <div class="menu-icon">
-        <span class="fas fa-bars"></span>
-      </div>
-      <div class="logo">
-      <img src="../../static/images/logo-removebg-preview.png"  alt="logo" width="50%">
-      </div>
-      <div class="nav-items">
-        <li><a href="/Accueil_hotel">Accueil</a></li>
-        <li><a href="{{url_for('hotel')}}">Hôtel</a></li>
-        <li><a href="{{url_for('restaurant')}}">Restaurant</a></li>
-        <li><a href="{{url_for('film')}}">Film</a></li>
-        <li><a href="{{url_for('ecole')}}">Ecole</a></li>
-        <input type="text" placeholder="Search..." style ="padding-left:10px; width:40%;">
+  <div class="menu-icon">
+    <span class="fas fa-bars"></span>
+  </div>
+  <div class="logo">
+    <img src="../../static/images/logo-removebg-preview.png" alt="logo" width="45%" margin-top="10px">
+  </div>
+  <div class="nav-items">
+    <li><a href="{{url_for('accueil')}}">Accueil</a></li>
+    <li><a href="{{url_for('hotel')}}">Hôtel</a></li>
+    <li><a href="{{url_for('restaurant')}}">Restaurant</a></li>
+    <li><a href="{{url_for('film')}}">Film</a></li>
+    <li><a href="{{url_for('ecole')}}">Ecole</a></li>
+    <input type="text" placeholder="Rechercher ici...">
+  </div>
 
-      </div>
 
+  <!-- PROFIL UTILISATEUR -->
 
-      <!-- PROFIL UTILISATEUR -->
-
-      <div class="action">
-        <div class="profile" onclick="menuToggle();">
-            <img src="../static/images/profile.png" alt="">
+  <div class="action">
+    <div class="profile" onclick="menuToggle();">
+      <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" alt=""  id="photo">
+    </div>
+    <div class="menu">
+      <h3>
+        <div>
+          <i class="fa-regular fa-bell"></i> Notifications
         </div>
-        <div class="menu">
-            <h3>
-                <div>
-                  <i class="fa-regular fa-bell"></i> Notification
-                </div>
-            </h3>
+      </h3>
 
-            <div class="user-img">
-              <img src="../static/images/profile.png" width="30%" id="photo">
-              <input type="file" id="file">
-              <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
-            </div>
-            <ul>
-                <li class="identifiant">
-                    <a href="#">{{user_data.nom_user}} {{user_data.prenom_user}}</a>
-                    <a href="#">{{user_data.email}}</a>
-                </li>
-                <li>
-                  <i class="fa-regular fa-pen-to-square"></i>
-                    <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
-                    <br>
-                    <i class="fa-solid fa-circle-user"></i>
-                    <a href="#">Modifier Mon Compte</a>
-                </li>
-                <li>
-                  <h5>Contactez-nous</h5>
-                  <i class="fa-brands fa-whatsapp"></i>
-                    <a href="#">+2250707070707</a>
-                    <br>
-                    <i class="fa-brands fa-instagram"></i>
-                    <a href="#">IvoryExplore</a>
-                  <br>
-                  <i class="fa-solid fa-envelope"></i>
-                    <a href="#">IvoryExplore@gmail.com</a>
-
-                </li>
-                <li>
-                  <i class="fa-solid fa-right-from-bracket"></i>
-                    <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
-                    <br>
-                    <i class="fa-solid fa-trash-can"></i>
-                    <a href="#">Supprimer</a>
-                </li>
-
-            </ul>
-        </div>
+      <div class="user-img">
+        <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" width="30%" id="photo">
+        <input type="file" id="file" name="profileImage">
+        <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
       </div>
-      <div class="cancel-icon">
-        <span class="fas fa-times"></span>
-      </div>
-    </nav>
+
+      <!-- <div class="user-img">
+        <img src="../static/images/profile.png" width="30%" id="photo">
+        <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}">
+        <input type="file" id="file" name="profileImage">
+        <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
+      </div> -->
+      <ul>
+        <li class="identifiant">
+          <p>{{ user_data.nom_user }} {{ user_data.prenom_user }}</p>
+          <p>{{ user_data.email }}</p>
+        </li>
+        <li>
+          <i class="fa-regular fa-pen-to-square"></i>
+          <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
+          <br>
+          <i class="fa-solid fa-circle-user"></i>
+          <a href="#">Modifier Mon Compte</a>
+        </li>
+        <li>
+          <h5>Contactez-nous</h5>
+          <i class="fa-brands fa-whatsapp"></i>
+          <a href="#">+2250707070707</a>
+          <br>
+          <i class="fa-brands fa-instagram"></i>
+          <a href="#">IvoryExplore</a>
+          <br>
+          <i class="fa-solid fa-envelope"></i>
+          <a href="#">IvoryExplore@gmail.com</a>
+
+        </li>
+        <li>
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
+          <br>
+          <i class="fa-solid fa-trash-can"></i>
+          <a href="#">Supprimer</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+  <div class="cancel-icon">
+    <span class="fas fa-times"></span>
+  </div>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var photoElement = document.getElementById('photo');
+    var fileInput = document.getElementById('file');
+
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          photoElement.src = e.target.result;
+
+          // Envoi du fichier au serveur via une requête AJAX
+          var formData = new FormData();
+          formData.append('profileImage', file);
+
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/upload_profile', true);
+          xhr.onload = function () {
+            // Traitement de la réponse du serveur, si nécessaire
+            console.log(xhr.responseText);
+          };
+
+          xhr.send(formData);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+
+  // Modifiez votre fonction menuToggle pour inclure l'affichage de la nouvelle photo de profil
+  function menuToggle() {
+    var menu = document.querySelector('.menu');
+    menu.classList.toggle('active');
+
+    // Ajoutez le code pour mettre à jour la photo de profil
+    var photoElement = document.getElementById('photo');
+    var fileInput = document.getElementById('file');
+
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          photoElement.src = e.target.result;
+
+          // Vous pouvez également envoyer la photo de profil au serveur ici
+          // via une requête AJAX pour télécharger le fichier sur le serveur
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+</script>

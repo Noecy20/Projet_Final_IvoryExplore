@@ -8,6 +8,8 @@ import pandas as pd
 import random
 import os
 import bcrypt
+from werkzeug.utils import secure_filename
+import time
 # from flask_mail import Mail, Message
 # import secrets  # Pour générer des tokens sécurisés
 
@@ -28,10 +30,68 @@ app.config['SECRET_KEY'] ='clés_flash'
 #     Trusted_Connection=yes;"""
 connection_string = (
     "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=Geek_Machine\SQLEXPRESS;"
+    "Server=DESKTOP-T61GK5V\SQLEXPRESS01;"
     "Database=ivoryExplore;"
     "Trusted_Connection=yes"
 )
+
+
+# ? Configuration pour le stockage des images du parent et du répétiteur
+# ? Configuration pour le stockage des images du parent et du répétiteur
+UPLOAD_FOLDER_PARENT = 'static/uploads/images_profil_parent'
+app.config['UPLOAD_FOLDER_PARENT'] = UPLOAD_FOLDER_PARENT
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['SESSION_TYPE'] = 'filesystem'
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+#UPLOAD_FOLDER_PARENT = 'static/uploads/images_profil_parent'
+#app.config['UPLOAD_FOLDER_PARENT'] = UPLOAD_FOLDER_PARENT
+
+# Route pour la modification du profil via une requête AJAX
+@app.route('/upload_profile', methods=['POST'])
+def upload_profile():
+    if 'profileImage' not in request.files:
+        return 'Aucun fichier trouvé'
+
+    file = request.files['profileImage']
+
+    if file.filename == '':
+        return 'Aucun fichier sélectionné'
+
+    if file and allowed_file(file.filename):
+        if not os.path.exists(UPLOAD_FOLDER_PARENT):
+            os.makedirs(UPLOAD_FOLDER_PARENT)
+
+        # Générez un nom de fichier unique en ajoutant un timestamp
+        timestamp = int(time.time())
+        filename = secure_filename(file.filename)
+        unique_filename = f"{filename}_{timestamp}"
+
+        file_path = os.path.join(app.config['UPLOAD_FOLDER_PARENT'], unique_filename)
+        file.save(file_path)
+
+        relative_path = os.path.relpath(file_path, app.config['UPLOAD_FOLDER_PARENT'])
+
+        user_id = session.get('Id')
+
+        if user_id is not None:
+            conn = pyodbc.connect(connection_string)
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET profileImage = ? WHERE id = ?", (relative_path, user_id))
+            conn.commit()
+            flash('Profil mis à jour avec succès!', 'success')
+            return 'Succès'
+        else:
+            return 'Erreur id de l\'utilisateur'
+
+    return 'Erreur lors du téléchargement du fichier'
+
+
+# Profil utilisateur
+
 
 
 
@@ -46,18 +106,21 @@ def index():
 def dash():
     return render_template("dashbord.html")
 
-#LA PAGE INSCRIPTION
-# DEBUT DE LA PAGE INSCRIPTION
-# ROUTE ==> LA PAGE INSCRIPTION
-@app.route('/Inscription',methods=["GET", "POST"])
+@app.route('/Inscription', methods=["GET", "POST"])
 def inscription():
     if request.method == 'POST':
         nom_user = request.form["nom_user"]
         prenom_user = request.form["prenom_user"]
         username = request.form["username"]
         email = request.form["email"]
-        passwords = request.form["passwords"]
-        hashed_password = generate_password_hash(passwords)
+        password = request.form["passwords"]
+        confirm_password = request.form["confirm_password"]  # Ajout du champ de confirmation de mot de passe
+        hashed_password = generate_password_hash(password)
+        
+        # Vérification que le mot de passe et la confirmation de mot de passe sont identiques
+        if password != confirm_password:
+            flash("Les mots de passe ne sont pas identique !", 'info')
+            return redirect(url_for('inscription'))
 
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
@@ -65,38 +128,40 @@ def inscription():
         users = cursor.fetchall()
 
         if users:
-            flash("ce compte existe déjà !", 'info')
+            flash("Ce compte existe déjà !", 'info')
         elif not re.match(r'[a-zA-Z0-9]+$', username):
             flash("Le nom d'utilisateur ne doit contenir que des lettres et des chiffres !", 'info')
             return redirect(url_for('inscription'))
         elif not re.match(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
-            flash("Email Invalid !", 'info')
+            flash("Email invalide !", 'info')
             return redirect(url_for('inscription'))
-
         else:
             conn = pyodbc.connect(connection_string)
             cursor = conn.cursor()
             c = cursor.execute('''
-                INSERT INTO users (nom_user,prenom_user, username, email, passwords)
-                VALUES ( ?, ?, ?, ?, ?)
-             ''', (nom_user,prenom_user,username, email, hashed_password))
-        
+                INSERT INTO users (nom_user, prenom_user, username, email, passwords)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (nom_user, prenom_user, username, email, hashed_password))
+            
             cursor.execute('''
-                  select id from users  where email = ? and  username=?
-             ''', ( email,username))
+                SELECT id FROM users WHERE email = ? AND username = ?
+            ''', (email, username))
                 
-            i = cursor.fetchone()
+            user_id = cursor.fetchone().id
 
             cursor.execute('''
-                INSERT INTO nco (id_user,nombre_connexion)
+                INSERT INTO nco (id_user, nombre_connexion)
                 VALUES (?, ?)
-             ''', (i.id, 0))
+            ''', (user_id, 0))
             
             conn.commit()
             conn.close()
+            
             flash("Votre compte a été enregistré avec succès !", 'info')
             return redirect(url_for('connexion'))
+
     return render_template("user_connect/inscription.html")
+
 #LA PAGE INSCRIPTION
 
 # DEBUT DE LA PAGE CONNEXION
@@ -105,15 +170,17 @@ def inscription():
 @app.route('/Connexion',methods=["GET", "POST"])
 def connexion():
     if request.method == 'POST':
-        email = request.form["email"]
+        email = request.form["email"]  # Utilisateur peut saisir l'e-mail ou le nom d'utilisateur
         passwords = request.form["passwords"]
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email))
+        cursor.execute('SELECT * FROM users WHERE email = ? OR username = ?', (email, email))
         users = cursor.fetchone()
         if users:
             user_pswd = users[5]
+
             if check_password_hash(user_pswd, passwords):
+
                 session['loggedin'] = True
                 session['Id'] = users[0]
                 session['username'] = users[1]
@@ -142,9 +209,7 @@ def connexion():
 # FIN DE LA PAGE CONNEXION
 
 #DEBUT MOT DE PASSE OUBLIE ET RECUPERATION
-
 # Route du mot de passe oublié
-
 
 @app.route('/mot_de_passe_oublie')
 def mot_de_passe_oublie():
@@ -185,21 +250,17 @@ def réinitialiser(user_id):
 def réinitialiser_traitement(user_id):
     if request.method == 'POST':
         mot_de_passe = request.form["mot_de_passe"]
-        
-        #mot_de_passe_hache = bcrypt.generate_password_hash(mot_de_passe).decode('utf-8')
-        # Génération du sel (salt)
-        salt = bcrypt.gensalt()
-        # Hachage du mot de passe avec le sel
-        mot_de_passe_hache = bcrypt.hashpw(mot_de_passe.encode('utf-8'), salt).decode('utf-8')
+        mot_de_passe_hache = generate_password_hash(mot_de_passe)
         
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
-        cursor.execute(f"UPDATE users SET passwords = ? WHERE id = ?", (mot_de_passe_hache, user_id))
+        cursor.execute("UPDATE users SET passwords = ? WHERE id = ?", (mot_de_passe_hache, user_id))
         conn.commit()
         
         flash('Modification réussie! Connectez-vous maintenant.', 'success')
-    
+
     return render_template('user_connect/connexion.html')
+
 
 #FIN MOT DE PASSE OUBLIE ET RECUPERATION
 
@@ -226,7 +287,7 @@ def preference():
     cursor = conn.cursor()
     if 'loggedin' in session: 
         with cursor.execute('SELECT * FROM nco WHERE id_user = ?', (session['Id'])) as result:
-                    test = result.fetchone()    
+            test = result.fetchone()    
         if(test.nombre_connexion != 1):
             return redirect(url_for('accueil'))    
         if request.method == 'POST':
@@ -251,11 +312,10 @@ def preference():
                 
                 return redirect(url_for('accueil'))
         
-             
-
         return render_template("user_connect/preference.html")
     else:
         return redirect(url_for('connexion'))
+
 
 
  
@@ -283,21 +343,29 @@ def modif_preference():
     
     
      
-# FIN DE LA PAGE ACCCUEIL
-
 # DEBUT DE LA PAGE ACCCUEIL
 #ROUTE ==> LA PAGE ACCUEIL
      
-@app.route('/Accueil_hotel')
-def accueil_hotel():
+from flask import render_template
+
+@app.route('/Accueil')
+def accueil():
+
+
     if 'loggedin' in session:
         conn = pyodbc.connect(connection_string)
         try:
             with conn.cursor() as cursor:
-                cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
-                user_data = cursor.fetchone()
+               
                 cursor.execute('SELECT interests FROM preference WHERE id_user = ?', (session['Id'],))
                 data = cursor.fetchone()
+
+                cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+                user_data = cursor.fetchone()
+
+
+                # Initialise la variable notes avec une liste vide en cas de non-respect de la première condition
+                notes = []
 
                 if any(keyword in data[0] for keyword in ["hotel class", "hotel chic"]):
                     cursor.execute('SELECT TOP 4 * FROM hotel')
@@ -307,36 +375,77 @@ def accueil_hotel():
                     data_note = pd.read_csv('csv/NoteHot.csv',  sep=';')
 
                     # Convertir la Series en une liste de dictionnaires
-                    #notes_list = [{"etablissement": etablissement, "note": note} for etablissement, note in zip(data_note["Nom de l'etablissement"], data_note["Note"])]
                     notes_list = [{"etablissement": etablissement, "note": note, "image": image_link} for etablissement, note, image_link in zip(data_note["Nom de l'etablissement"], data_note["Note"], data_note["liens"])]
 
                     # Mélanger la liste de manière aléatoire
                     random.shuffle(notes_list)
 
-                    return render_template("partial/accueil_hotel.html", data_h=data_h, notes=notes_list[:10],user_data=user_data)
+                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10], user_data = user_data)
                 else:
-                    return render_template("partial/accueil_hotel", data_h=None, notes=None,user_data=user_data)
+                    print("Avant le rendu de template (condition else)")  # Ajoutez cette ligne de débogage
+                    return render_template("accueil.html", data_h=None, notes=notes, user_data=user_data)
         finally:
             conn.close()
     else:
-        return redirect(url_for('connexion'))          
+        return redirect(url_for('connexion'))
+    
 
     #code de trie et d'affichage 
    
+
+
+# @app.route('/navbar_data')
+def navbar_data():
+    if 'loggedin' in session:
+        conn = pyodbc.connect(connection_string)
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+                user_data = cursor.fetchone()
+
+                return render_template("partial/navbar.html", user_data=user_data)
+        finally:
+            conn.close()
+    # else:
+        # return render_template("partial/navbar.html", user_data=None)
+
+
 # FIN DE LA PAGE ACCCUEIL
 
 # DEBUT DE LA PAGE ECOLE
 #ROUTE ==> LA PAGE ECOLE
 @app.route('/Ecole')
 def ecole():
-    return render_template("ecole/ecole.html")
+    if 'loggedin' in session:
+        conn = pyodbc.connect(connection_string)
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+                user_data = cursor.fetchone()
+
+                return render_template("ecole/ecole.html", user_data=user_data)
+        finally:
+            conn.close()
+    else:
+        return render_template("ecole/ecole.html", user_data=user_data)
 # FIN DE LA PAGE ECOLE
 
 # DEBUT DE LA PAGE FILM
 #ROUTE ==> LA PAGE FILM
 @app.route('/Film')
 def film():
-    return render_template("film/film.html")
+    if 'loggedin' in session:
+        conn = pyodbc.connect(connection_string)
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+                user_data = cursor.fetchone()
+
+                return render_template("film/film.html", user_data=user_data)
+        finally:
+            conn.close()
+    else:
+        return render_template("film/film.html", user_data=user_data)
 # FIN DE LA PAGE FILM
 
 # DEBUT DE LA PAGE HOTEL
@@ -349,7 +458,9 @@ def hotel():
     cursor.execute(" select top 30 * from hotel")
     data = cursor.fetchall()
     # connexion.close()
-    return render_template("hotel/hotel.html",data=data)
+    cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+    user_data = cursor.fetchone()
+    return render_template("hotel/hotel.html",data=data, user_data=user_data)
  else:
         return redirect(url_for('connexion'))
 
@@ -446,12 +557,16 @@ def vue():
 #ROUTE ==> LA PAGE RESTAURANTS
 @app.route('/Restaurant')
 def restaurant():
+    user_id = session.get("Id")
+    print(user_id)
     if 'loggedin' in session:
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
         cursor.execute(" select * from restaurant")
         data = cursor.fetchall()
-        return render_template("restaurant/restaurant.html",data=data)
+        cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
+        user_data = cursor.fetchone()
+        return render_template("restaurant/restaurant.html",data=data, user_data = user_data)
     else:
         return redirect(url_for('connexion'))
 # FIN DE LA PAGE RESTAURANTS

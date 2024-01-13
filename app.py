@@ -14,7 +14,7 @@ app.config['SECRET_KEY'] = 'clés_flash'
 app.config['SQL_SERVER_CONNECTION_STRING'] = """
     Driver={SQL Server};
     Server=MTN-Academy\SQLEXPRESS;
-    Database=ivoryexplore;
+    Database=ivorydb;
     Trusted_Connection=yes;"""
 
 conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
@@ -114,7 +114,7 @@ def connexion():
             flash("Identifiant incorrect !", 'info')
             return redirect(url_for('connexion'))
 
-# >>>>>>> 43427bef11a6c025e19b5f649395221ef963ab2a
+
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
 
@@ -176,19 +176,20 @@ def restaurant():
 #dashoard
 @app.route('/dashbord',methods = ['POST', 'GET'])
 def dashbord():
-    if session['role'] != 'admin':
-        return redirect(request.referrer)
-    else:
-        conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
-        cursor = conn.cursor()
-        cursor.execute("select  * from users")
-        # cursor.execute(""" SELECT * FROM Transfert """)
-        data = cursor.fetchall()
-        nbr_user=len(data)
-        conn.commit()
-        conn.close()
-        return render_template("dashbord.html" , data1=data, nbr_user=nbr_user)
-
+    #  if 'loggedin' in session:
+    # if session['role'] != 'admin':
+    #     return redirect(request.referrer)
+    # else:
+    conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
+    cursor = conn.cursor()
+    cursor.execute("select  * from users")
+    # cursor.execute(""" SELECT * FROM Transfert """)
+    data = cursor.fetchall()
+    nbr_user=len(data)
+    conn.commit()
+    conn.close()
+    return render_template("dashbord.html" , data1=data, nbr_user=nbr_user)
+    # return redirect(url_for('connexion'))
 
 if __name__ == "__main__":
     app.run(debug=True)

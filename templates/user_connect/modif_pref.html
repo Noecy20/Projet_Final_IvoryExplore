@@ -1,0 +1,119 @@
+{%extends "./base.html"%}
+
+{%block centre%}
+
+<section class="Modif_prefe">
+    <form method="post">
+        <h1>Modifier vos habitudes</h1>
+        <div class="container">
+            <div>
+                <label>
+                    <input type="checkbox" value="Romance" name="option[]">
+                    <span>Romance</span>
+                </label>
+            </div>
+
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Drame" name="option[]">
+                    <span>Drame</span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Plats Préférés" name="option[]">
+                    <span>Plats Préférés</span>
+                </label>
+            </div>
+
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Science-Fiction" name="option[]">
+                    <span>Science-Fiction</span>
+                </label>
+            </div>
+
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Coûts Moyen" name="option[]">
+                    <span>Coûts Moyen</span>
+                </label>
+            </div>
+
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Ecole" name="option[]">
+                    <span>Ecole</span>
+                </label>
+            </div>
+
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Film Horreur" name="option[]">
+                    <span>Film Horreur</span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Hôtel 5 Etoiles" name="option[]">
+                    <span>Hôtel 5 Etoiles</span>
+                </label>
+
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" value="Film Action" name="option[]">
+                    <span>Film Action</span>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" value="Hotel chic" name="option[]">
+                    <span>hotel class</span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Hotel chic" name="option[]">
+                    <span>Bonne Nourriture</span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" value="Hotel chic" name="option[]">
+                    <span>Hotel chic</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- case de préférence à cocher -->
+
+
+
+        <!-- <div class="buttons">
+            <a href="{{url_for('accueil')}}" class="signin">Retour</a>
+            <input type="submit" class="signup" value="Suivant">
+        </div> -->
+        <div class="buttons">
+            <div class="btnretour">
+                <button><a href="{{url_for('accueil')}}">Retour</a></button>
+            </div>
+            <div class="btnmofipref">
+              <input type="submit"  value="Suivant">
+            </div>
+        </div>
+    </form>
+</section>
+
+
+{%endblock centre%}
+ 

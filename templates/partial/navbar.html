@@ -1,1046 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ivory Explore</title>
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="stylesheet" href="{{url_for('static', filename='./style.css')}}">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />  <style>
-    nav{
-      background: #066D84;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      height: 70px;
-      padding: 0 100px;
-    }
-    nav .logo{
-      color: #fff;
-      font-size: 30px;
-      font-weight: 600;
-      letter-spacing: -1px;
-    }
-    nav .nav-items{
-      display: flex;
-      flex: 1;
-      padding: 0 0 0 40px;
-    }
-    nav .nav-items li{
-      list-style: none;
-      padding: 0 15px;
-    }
-    nav .nav-items li a{
-      color: #fff;
-      font-size: 18px;
-      font-weight: 500;
-      text-decoration: none;
-    }
-    nav .nav-items li a:hover{
-      color: #ff3d00;
-    }
-    nav form{
-      display: flex;
-      height: 40px;
-      padding: 2px;
-      background: #1e232b;
-      min-width: 18%!important;
-      border-radius: 2px;
-      border: 1px solid rgba(155,155,155,0.2);
-    }
-    nav form .search-data{
-      width: 100%;
-      height: 100%;
-      padding: 0 10px;
-      color: #fff;
-      font-size: 17px;
-      border: none;
-      font-weight: 500;
-      background: none;
-    }
-    nav form button{
-      padding: 0 15px;
-      color: #fff;
-      font-size: 17px;
-      background: #ff3d00;
-      border: none;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-    nav form button:hover{
-      background: #e63600;
-    }
-      nav .menu-icon,
-      nav .cancel-icon,
-      nav .search-icon{
-        width: 40px;
-        text-align: center;
-        margin: 0 50px;
-        font-size: 18px;
-        color: #fff;
-        cursor: pointer;
-        display: none;
-      }
-      nav .menu-icon span,
-      nav .cancel-icon,
-      nav .search-icon{
-        display: none;
-      }
-      @media (max-width: 1245px) {
-        nav{
-          padding: 0 50px;
-        }
-      }
-      @media (max-width: 1140px){
-        nav{
-          padding: 0px;
-        }
-        nav .logo{
-          flex: 2;
-          text-align: center;
-        }
-        nav .nav-items{
-          position: fixed;
-          z-index: 99;
-          top: 70px;
-          width: 100%;
-          left: -100%;
-          height: 100%;
-          padding: 10px 50px 0 50px;
-          text-align: center;
-          background: #14181f;
-          display: inline-block;
-          transition: left 0.3s ease;
-        }
-        nav .nav-items.active{
-          left: 0px;
-        }
-        nav .nav-items li{
-          line-height: 40px;
-          margin: 30px 0;
-        }
-        nav .nav-items li a{
-          font-size: 20px;
-        }
-        nav form{
-          position: absolute;
-          top: 80px;
-          right: 50px;
-          opacity: 0;
-          pointer-events: none;
-          transition: top 0.3s ease, opacity 0.1s ease;
-        }
-        nav form.active{
-          top: 95px;
-          opacity: 1;
-          pointer-events: auto;
-        }
-        nav form:before{
-          position: absolute;
-          content: "";
-          top: -13px;
-          right: 0px;
-          width: 0;
-          height: 0;
-          z-index: -1;
-          border: 10px solid transparent;
-          border-bottom-color: #1e232b;
-          margin: -20px 0 0;
-        }
-        nav form:after{
-          position: absolute;
-          content: '';
-          height: 60px;
-          padding: 2px;
-          background: #1e232b;
-          border-radius: 2px;
-          min-width: calc(100% + 20px);
-          z-index: -2;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-        }
-        nav .menu-icon{
-          display: block;
-        }
-        nav .search-icon,
-        nav .menu-icon span{
-          display: block;
-        }
-        nav .menu-icon span.hide,
-        nav .search-icon.hide{
-          display: none;
-        }
-        nav .cancel-icon.show{
-          display: block;
-        }
-      }
-      .content{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        text-align: center;
-        transform: translate(-50%, -50%);
-      }
-      .content header{
-        font-size: 30px;
-        font-weight: 700;
-      }
-      .content .text{
-        font-size: 30px;
-        font-weight: 700;
-      }
-      .space{
-        margin: 10px 0;
-      }
-      nav .logo.space{
-        color: red;
-        padding: 0 5px 0 0;
-      }
-      @media (max-width: 980px){
-        nav .menu-icon,
-        nav .cancel-icon,
-        nav .search-icon{
-          margin: 0 20px;
-        }
-        nav form{
-          right: 30px;
-        }
-      }
-      @media (max-width: 350px){
-        nav .menu-icon,
-        nav .cancel-icon,
-        nav .search-icon{
-          margin: 0 10px;
-          font-size: 16px;
-        }
-      }
-      .content{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .content header{
-        font-size: 30px;
-        font-weight: 700;
-      }
-      .content .text{
-        font-size: 30px;
-        font-weight: 700;
-      }
-      .content .space{
-        margin: 10px 0;
-      }
-
-  header a {
-    text-decoration: none;
-    color: white;
-  }
-
-  .input-box{
-    top:  -13px;
-    position: relative;
-    height: 55px;
-    max-width: 55px;
-    width: 100%;
-    margin: 0 40px;
-    border-radius: 6px;
-    /*background-color: #fff;*/
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-  .input-box.open{
-    max-width: 350px;
-  }
-  input{
-    position: relative;
-    outline: none;
-    border: none;
-    height: 100%;
-    width: 100%;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 400;
-    /* color: #333; */
-     /*background-color: #fff; */
-  }
- /* .input-box.open{
-    padding: 0 15px 0 65px;
-  }*/
-  .icon{
-    position: absolute;
-    height: 60%;
-    width: 60px;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    font-size: 2.5rem;
-    color: #f4c8c0;
-    background-color: #fff;
-  }
-
-  .search-icon,.close-icon{
-    position: absolute;
-    font-size: 30px;
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .input-box.open .search-icon{
-    transform: translateY(-50%) rotate(0);
-  }
-  .close-icon{
-    right: -45px;
-    color: #fff;
-    padding: 5px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-50%);
-  }
-  .input-box.open .close-icon{
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(-50%) rotate(180deg);
-  }
- @media (max-width: 980px){
-  .icon{
-    display: none;
-    visibility: hidden;
-
-  }
-  .input-box{
-    display: none;
-    visibility: hidden;
-  }
- }
-
-  /*PROFIL UTILISATEUR*/
-
-  @media (max-width: 980px){
-    .action{
-      display: none;
-    }
-  }
-  .action{
-    /*position: fixed;*/
-    right: 30px;
-    top:20px
-  }
-  .action .profile{
-    border-radius: 50%;
-    cursor: pointer;
-    height: 50px;
-    overflow: hidden;
-    position: relative;
-    width: 60px;
-  }
-  .action .profile img{
-    width: 100%;
-    top:0;
-    position: absolute;
-    object-fit: cover;
-    left: 0;
-    height: 100%;
-  }
-  .action .menu{
-    background-color:#fffff47b;
-  /*box-sizing:0 5px 25px rgba(0,0,0,0.1);*/
-    border-radius: 15px;
-    /*padding: 10px 20px;*/
-    position: absolute;
-    right: 10px;
-    width: 25%;
-    transition: 0.5s;
-    /*top: 120px;*/
-    height: 95%;
-    visibility: hidden;
-    opacity: 0;
-  }
-  .action .menu.active{
-    opacity: 1;
-    /*top: 80px;*/
-    visibility: visible;
-  }
-  .action .menu::before{
-    /*background-color:#fff;*/
-    content: '';
-    height: 20px;
-    position: absolute;
-    /*right: 30px;*/
-    transform:rotate(45deg);
-    /*top:-5px;*/
-    width: 20px;
-  }
-  .action .menu h3{
-    color: black;
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.3em;
-    padding: 20px 0px;
-    text-align: left;
-    width: 100%;
-  }
-  .action .menu h3 div{
-    color: black;
-    font-size: 14px;
-    font-weight: 400;
-  }
-  .action .menu ul li{
-    align-items: center;
-    border-top:1px solid rgba(0, 0, 0, 0.363);
-    /*display: flex;*/
-    /*justify-content: space-around;*/
-    list-style: none;
-    padding: 10px 0px;
-  }
-  .action .menu ul li img{
-    max-width: 20px;
-    margin-right: 10px;
-    opacity: 0.5;
-    transition:0.5s
-  }
-  .action .menu ul li a{
-    /*display: inline-block;*/
-    color: rgba(0, 0, 0, 0.717);
-    font-size: 14px;
-    font-weight: 600;
-    padding-left: 15px;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: 0.5s;
-  }
-  .action .menu ul li:hover img{
-    opacity: 1;
-  }
-
-  li i {
-    margin-left: 20px;
-  }
-
-  .identifiant{
-    text-align: center;
-  }
-
-  /*fin profil utilisateur*/
+<nav>
+  <div class="menu-icon">
+    <span class="fas fa-bars"></span>
+  </div>
+  <div class="logo">
+    <img src="../../static/images/logo-removebg-preview.png" alt="logo" width="45%" margin-top="10px">
+  </div>
+  <div class="nav-items">
+    <li><a href="{{url_for('accueil')}}">Accueil</a></li>
+    <li><a href="{{url_for('hotel')}}">Hôtel</a></li>
+    <li><a href="{{url_for('restaurant')}}">Restaurant</a></li>
+    <li><a href="{{url_for('film')}}">Film</a></li>
+    <li><a href="{{url_for('ecole')}}">Ecole</a></li>
+    <input type="text" placeholder="Rechercher ici...">
+  </div>
 
 
-  /*changer image profil utilisateur*/
-  .user-img{
-    width: 130px;
-    height: 130px;
-    border-radius:50% ;
-    justify-content: center;
-    align-items: center;
-    margin-left: 25%;
-    /*position: fixed;*/
-  }
+  <!-- PROFIL UTILISATEUR -->
 
-  #photo{
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-  }
-
-  #file{
-    display: none;
-  }
-  #uploadbtn{
-    position: absolute;
-    height: 35px;
-    width: 35px;
-    padding: 6px 6px;
-    border-radius: 50%;
-    cursor: pointer;
-    color: #fff;
-    transform: translate(-60%);
-    margin-top:   85px;
-    background-color: rgba(128, 128, 128, 0.422);
-    /*border: 1px solid black;*/
-  }
-
-  /*responsivité navbar*/
-  nav .nav-items{
-    display: flex;
-    flex: 1;
-    padding: 0 0 0 40px;
-  }
-  nav .nav-items li{
-    list-style: none;
-    padding: 0 15px;
-  }
-  nav .nav-items li a{
-    color: #fff;
-    font-size: 18px;
-    font-weight: 500;
-    text-decoration: none;
-  }
-  nav .nav-items li a:hover{
-    color: #ff3d00;
-  }
-  nav form{
-    display: flex;
-    height: 40px;
-    padding: 2px;
-    background: #1e232b;
-    min-width: 18%!important;
-    border-radius: 2px;
-    border: 1px solid rgba(155,155,155,0.2);
-  }
-  nav form .search-data{
-    width: 100%;
-    height: 100%;
-    padding: 0 10px;
-    color: #fff;
-    font-size: 17px;
-    border: none;
-    font-weight: 500;
-    background: none;
-  }
-  nav form button{
-    padding: 0 15px;
-    color: #fff;
-    font-size: 17px;
-    background: #ff3d00;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-  }
-  nav form button:hover{
-    background: #e63600;
-  }
-  nav .menu-icon,
-  nav .cancel-icon,
-  nav .search-icon{
-    width: 40px;
-    text-align: center;
-    margin: 0 50px;
-    font-size: 18px;
-    color: #fff;
-    cursor: pointer;
-    display: none;
-  }
-  nav .menu-icon span,
-  nav .cancel-icon,
-  nav .search-icon{
-    display: none;
-  }
-  @media (max-width: 1245px) {
-    nav{
-      padding: 0 50px;
-    }
-  }
-  @media (max-width: 1140px){
-    nav{
-      padding: 0px;
-    }
-    nav .logo{
-      flex: 2;
-      text-align: center;
-    }
-    nav .nav-items{
-      position: fixed;
-      z-index: 99;
-      top: 70px;
-      width: 100%;
-      left: -100%;
-      height: 100%;
-      padding: 10px 50px 0 50px;
-      text-align: center;
-      background: #14181f;
-      display: inline-block;
-      transition: left 0.3s ease;
-    }
-    nav .nav-items.active{
-      left: 0px;
-    }
-    nav .nav-items li{
-      line-height: 40px;
-      margin: 30px 0;
-    }
-    nav .nav-items li a{
-      font-size: 20px;
-    }
-    nav form{
-      position: absolute;
-      top: 80px;
-      right: 50px;
-      opacity: 0;
-      pointer-events: none;
-      transition: top 0.3s ease, opacity 0.1s ease;
-    }
-    nav form.active{
-      top: 95px;
-      opacity: 1;
-      pointer-events: auto;
-    }
-    nav form:before{
-      position: absolute;
-      content: "";
-      top: -13px;
-      right: 0px;
-      width: 0;
-      height: 0;
-      z-index: -1;
-      border: 10px solid transparent;
-      border-bottom-color: #1e232b;
-      margin: -20px 0 0;
-    }
-    nav form:after{
-      position: absolute;
-      content: '';
-      height: 60px;
-      padding: 2px;
-      background: #1e232b;
-      border-radius: 2px;
-      min-width: calc(100% + 20px);
-      z-index: -2;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-    nav .menu-icon{
-      display: block;
-    }
-    nav .search-icon,
-    nav .menu-icon span{
-      display: block;
-    }
-    nav .menu-icon span.hide,
-    nav .search-icon.hide{
-      display: none;
-    }
-    nav .cancel-icon.show{
-      display: block;
-    }
-  }
-  .content{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    text-align: center;
-    transform: translate(-50%, -50%);
-  }
-  .content header{
-    font-size: 30px;
-    font-weight: 700;
-  }
-  .content .text{
-    font-size: 30px;
-    font-weight: 700;
-  }
-  .space{
-    margin: 10px 0;
-  }
-  nav .logo.space{
-    color: red;
-    padding: 0 5px 0 0;
-  }
-
-
-
-  @media (max-width: 980px){
-    nav .menu-icon,
-    nav .cancel-icon,
-    nav .search-icon{
-      margin: 0 20px;
-    }
-    nav form{
-      right: 30px;
-    }
-  }
-  @media (max-width: 350px){
-    nav .menu-icon,
-    nav .cancel-icon,
-    nav .search-icon{
-      margin: 0 10px;
-      font-size: 16px;
-    }
-  }
-  .content{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .content header{
-    font-size: 30px;
-    font-weight: 700;
-  }
-  .content .text{
-    font-size: 30px;
-    font-weight: 700;
-  }
-  .content .space{
-    margin: 10px 0;
-  }
-
-
-/*PROFIL UTILISATEUR*/
-
-@media (max-width: 980px){
-  .action{
-    display: none;
-  }
-}
-.action{
-  /*position: fixed;*/
-  right: 30px;
-  top:20px
-}
-.action .profile{
-  border-radius: 50%;
-  cursor: pointer;
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  width: 60px;
-  right: -80px;
-}
-.action .profile img{
-  width: 100%;
-  top:0;
-  position: absolute;
-  object-fit: cover;
-  height: 100%;
-}
-.action .menu{
-  background-color:#fffff47b;
-/*box-sizing:0 5px 25px rgba(0,0,0,0.1);*/
-  border-radius: 15px;
-  /*padding: 10px 20px;*/
-  position: absolute;
-  right: 10px;
-  width: 25%;
-  transition: 0.5s;
-  /*top: 120px;*/
-  height: 85%;
-  visibility: hidden;
-  opacity: 0;
-}
-.action .menu.active{
-  opacity: 1;
-  /*top: 80px;*/
-  visibility: visible;
-}
-.action .menu::before{
-  background-color:#fff;
-  content: '';
-  height: 20px;
-  position: absolute;
-  /*right: 30px;*/
-  transform:rotate(45deg);
-  /*top:-5px;*/
-  width: 20px;
-}
-.action .menu h3{
-  color: black;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.3em;
-  padding: 20px 0px;
-  text-align: left;
-  width: 100%;
-}
-.action .menu h3 div{
-  color: black;
-  font-size: 14px;
-  font-weight: 400;
-}
-.action .menu ul li{
-  align-items: center;
-  border-top:1px solid rgba(0, 0, 0, 0.363);
-  /*display: flex;*/
-  /*justify-content: space-around;*/
-  list-style: none;
-  padding: 10px 0px;
-}
-.action .menu ul li img{
-  max-width: 20px;
-  margin-right: 10px;
-  opacity: 0.5;
-  transition:0.5s
-}
-.action .menu ul li a{
-  /*display: inline-block;*/
-  color: rgba(0, 0, 0, 0.717);
-  font-size: 14px;
-  font-weight: 600;
-  padding-left: 15px;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: 0.5s;
-}
-.action .menu ul li:hover img{
-  opacity: 1;
-}
-
-li i {
-  margin-left: 20px;
-}
-
-.identifiant{
-  text-align: center;
-}
-/*.action .menu ul li:hover a{
-  color:#ff00ff;
-}*/
-
-
-
-/*changer la photo du profil utilisateur*/
-.user-img{
-  width: 130px;
-  height: 130px;
-  border-radius:50% ;
-  justify-content: center;
-  align-items: center;
-  margin-left: 25%;
-  /*position: fixed;*/
-}
-
-#photo{
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-}
-
-#file{
-  display: none;
-}
-#uploadbtn{
-  position: absolute;
-  height: 35px;
-  width: 35px;
-  padding: 6px 6px;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #fff;
-  transform: translate(-60%);
-  margin-top:   85px;
-  background-color: rgba(128, 128, 128, 0.422);
-  /*border: 1px solid black;*/
-}
-
-
-
-
-
-
-    /*recherche*/
-  .input-box{
-    position: relative;
-    height: 55px;
-    max-width: 55px;
-    width: 100%;
-    margin: 0 40px;
-    border-radius: 6px;
-    background-color: #fff;
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-  .input-box.open{
-    max-width: 350px;
-  }
-  input{
-    position: relative;
-    outline: none;
-    border: none;
-    height: 100%;
-    width: 100%;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 400;
-    /* color: #333; */
-    background-color: #fff;
-  }
-  .input-box.open{
-    padding: 0 15px 0 65px;
-  }
-  .icon{
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    width: 60px;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    /*background-color: #fff;*/
-  }
-  .search-icon,.close-icon{
-    position: absolute;
-    top: 50%;
-    font-size: 30px;
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-  .search-icon{
-    color: #f4c8c0;
-
-    transform: translateY(-50%) rotate(90deg);
-  }
-  .input-box.open .search-icon{
-    transform: translateY(-50%) rotate(0);
-  }
-  .close-icon{
-    right: -45px;
-    color: #fff;
-    padding: 5px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-50%);
-  }
-  .input-box.open .close-icon{
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(-50%) rotate(180deg);
-  }
-
-</style>
-</head>
-<body>
-
-    <nav>
-      <div class="menu-icon">
-        <span class="fas fa-bars"></span>
-     </div>
-     <div class="cancel-icon">
-      <span class="fas fa-times"></span>
-   </div>
-     <div class="logo">
-      <img src="../../static/images/logo-removebg-preview.png"  alt="logo" width="50%">
-     </div>
-     <div class="nav-items">
-        <li><a href="{{url_for('hotel')}}">Hôtel</a></li>
-        <li><a href="{{url_for('restaurant')}}">Restaurant</a></li>
-        <li><a href="{{url_for('film')}}">Film</a></li>
-        <li><a href="{{url_for('ecole')}}">Ecole</a></li>
-
-      <div class="search" >
-        <div class="input-box">
-           <input type="text" placeholder="Search...">
-          <span class="icon">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </span>
-          <i class="uil uil-times close-icon"></i>
-        </div>
-     </div>
-
-   <div class="action">
+  <div class="action">
     <div class="profile" onclick="menuToggle();">
-        <img src="../static/images/profile.png" alt="">
+      <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" alt=""  id="photo">
     </div>
-
-
-<div class="menu">
-        <h3>
-            <div>
-              <i class="fa-regular fa-bell"></i> Notification
-            </div>
-        </h3>
-
-        <div class="user-img">
-          <img src="../static/images/profile.png" width="30%" id="photo">
-          <input type="file" id="file">
-          <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
+    <div class="menu">
+      <h3>
+        <div>
+          <i class="fa-regular fa-bell"></i> Notifications
         </div>
-        <ul>
-            <li class="identifiant">
-                <a href="#">Kouakou jean</a>
-                <a href="#">kouakoujean@gmail.com</a>
-            </li>
-            <li>
-              <i class="fa-regular fa-pen-to-square"></i>
-                <a href="#">Modifier Préférence</a>
-                <br>
-                <i class="fa-solid fa-circle-user"></i>
-                <a href="#">Modifier Mon Compte</a>
-            </li>
-            <li>
-              <h5>Contactez-nous</h5>
-              <i class="fa-brands fa-whatsapp"></i>
-                <a href="#">+2250707070707</a>
-                <br>
-                <i class="fa-brands fa-instagram"></i>
-                <a href="#">IvoryExplore</a>
-              <br>
-              <i class="fa-solid fa-envelope"></i>
-                <a href="#">IvoryExplore@gmail.com</a>
-            </li>
-            <li>
-              <i class="fa-solid fa-right-from-bracket"></i>
-                <a href="#">Quitter/Se deconnecter</a>
-                <br>
-                <i class="fa-solid fa-trash-can"></i>
-                <a href="#">Supprimer</a>
-            </li>
-        </ul>
+      </h3>
+
+      <div class="user-img">
+        <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" width="30%" id="photo">
+        <input type="file" id="file" name="profileImage">
+        <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
+      </div>
+
+      <!-- <div class="user-img">
+        <img src="../static/images/profile.png" width="30%" id="photo">
+        <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}">
+        <input type="file" id="file" name="profileImage">
+        <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
+      </div> -->
+      <ul>
+        <li class="identifiant">
+          <p>{{ user_data.nom_user }} {{ user_data.prenom_user }}</p>
+          <p>{{ user_data.email }}</p>
+        </li>
+        <li>
+          <i class="fa-regular fa-pen-to-square"></i>
+          <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
+          <br>
+          <i class="fa-solid fa-circle-user"></i>
+          <a href="#">Modifier Mon Compte</a>
+        </li>
+        <li>
+          <h5>Contactez-nous</h5>
+          <i class="fa-brands fa-whatsapp"></i>
+          <a href="#">+2250707070707</a>
+          <br>
+          <i class="fa-brands fa-instagram"></i>
+          <a href="#">IvoryExplore</a>
+          <br>
+          <i class="fa-solid fa-envelope"></i>
+          <a href="#">IvoryExplore@gmail.com</a>
+
+        </li>
+        <li>
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
+          <br>
+          <i class="fa-solid fa-trash-can"></i>
+          <a href="#">Supprimer</a>
+        </li>
+
+      </ul>
     </div>
   </div>
   <div class="cancel-icon">
     <span class="fas fa-times"></span>
- </div>
+  </div>
 </nav>
-</body>
 
 <script>
-  /*ouvrir la barre de récherche qui se trouve sur la navbar*/
-  let inputBox = document.querySelector(".input-box"),
-  searchIcon = document.querySelector(".icon"),
-  closeIcon = document.querySelector(".close-icon");
-  searchIcon.addEventListener("click", () => inputBox.classList.add("open"));
-  closeIcon.addEventListener("click", () => inputBox.classList.remove("open"));
+  document.addEventListener('DOMContentLoaded', function () {
+    var photoElement = document.getElementById('photo');
+    var fileInput = document.getElementById('file');
 
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
 
-/*responsivité*/
-const menuBtn = document.querySelector(".menu-icon span");
-         const searchBtn = document.querySelector(".search-icon");
-         const cancelBtn = document.querySelector(".cancel-icon");
-         const items = document.querySelector(".nav-items");
-         const form = document.querySelector("form");
-         menuBtn.onclick = ()=>{
-           items.classList.add("active");
-           menuBtn.classList.add("hide");
-           searchBtn.classList.add("hide");
-           cancelBtn.classList.add("show");
-         }
-         cancelBtn.onclick = ()=>{
-           items.classList.remove("active");
-           menuBtn.classList.remove("hide");
-           searchBtn.classList.remove("hide");
-           cancelBtn.classList.remove("show");
-           form.classList.remove("active");
-           cancelBtn.style.color = "#ff3d00";
-         }
-         searchBtn.onclick = ()=>{
-           form.classList.add("active");
-           searchBtn.classList.add("hide");
-           cancelBtn.classList.add("show");
-         }
- //faire apparaitre le profil utilisateur//
- function menuToggle(){
-  const toggleMenu = document.querySelector('.menu');
-  toggleMenu.classList.toggle('active')
-}
+      if (file) {
+        var reader = new FileReader();
 
-//pour le profil utilisateur pour que lorqu'on clique sur l'icon de la camera ça part réchercher nos photo//
-const imgDiv = document.querySelector('.user-img');
-const img = document.querySelector('#photo');
-const file = document.querySelector('#file');
-const uploadebtn = document.querySelector('uploadbtn');
-file.addEventListener('change', function(){
-const chosedfile = this.files[0];
-if(chosedfile){
-const reader = new FileReader();
-reader.addEventListener('load', function(){
-img.setAttribute('src', reader.result);
-})
-reader.readAsDataURL(chosedfile)
-}
-})
+        reader.onload = function (e) {
+          photoElement.src = e.target.result;
 
-//DEROULER LE MENU UTILISATEUR//
-function menuToggle(){
-const toggleMenu = document.querySelector('.menu');
-toggleMenu.classList.toggle('active')
-}
+          // Envoi du fichier au serveur via une requête AJAX
+          var formData = new FormData();
+          formData.append('profileImage', file);
+
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/upload_profile', true);
+          xhr.onload = function () {
+            // Traitement de la réponse du serveur, si nécessaire
+            console.log(xhr.responseText);
+          };
+
+          xhr.send(formData);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+
+  // Modifiez votre fonction menuToggle pour inclure l'affichage de la nouvelle photo de profil
+  function menuToggle() {
+    var menu = document.querySelector('.menu');
+    menu.classList.toggle('active');
+
+    // Ajoutez le code pour mettre à jour la photo de profil
+    var photoElement = document.getElementById('photo');
+    var fileInput = document.getElementById('file');
+
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
+
+      if (file) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          photoElement.src = e.target.result;
+
+          // Vous pouvez également envoyer la photo de profil au serveur ici
+          // via une requête AJAX pour télécharger le fichier sur le serveur
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 </script>
-</html>

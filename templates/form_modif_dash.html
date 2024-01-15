@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>      
+        
+    
+
+
+.droite{
+    width: 70%;
+    height: 500px;
+    /* border: 2px solid magenta; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.droite form{
+    width: 100%;
+    height: 70%;
+    display: grid;
+    grid-template-columns: 10% 60%;
+    row-gap: 20px;
+    /* border: 2px solid olivedrab; */
+}
+
+.droite h3{
+    margin-right: 70%;
+}
+
+.droit{
+    height: 80%;
+    grid-column: 1 / -1;
+    display: flex;
+    /* border: 1px solid red; */
+    margin-left: 30%;
+    margin-top: 20px;
+    /* justify-content: space-between; */
+}
+.droit button{
+    width: 170px;
+    height: 60px;
+    border: none;
+    color: black;
+    color: red;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+
+.droit button:hover{
+    color: aliceblue;
+    background-color: red;
+}
+
+.value{
+    text-align: center;
+}
+
+body{
+    background-color: #066D84;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+    <div class="droite">
+        <h3>Modifier Users</h3>
+        <form  method="post"  action="{{url_for('form_modif_dash',prod=mybase[0])}}" >
+            <label for="Nom">Nom:</label>
+            <input class="value" type="text" name="nom_user"  value="{{mybase[1]}}">
+
+            <label for="Prenoms">Prenoms:</label>
+            <input class="value" type="text" name="prenom_user" value="{{mybase[2]}}">
+
+            <label for="Username">Username:</label>
+            <input  type="text" name="username" value="{{mybase[3]}}">
+
+            <label for="prix">Email:</label>
+            <input  type="text" name="email" value="{{mybase[3]}}">
+            
+            <div class="droit">
+                <button class="bout"><a href="{{url_for('dash')}}">Retour</a></button>
+               <button onclick="return confirm('utilisateur modifié')" id="bout1" type="submit"> Valider</button>
+            </div> 
+        </form>
+    </div>
+</section>
+</body>
+</html>

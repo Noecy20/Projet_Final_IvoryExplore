@@ -81,6 +81,10 @@
         }
 
         nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
             position: fixed;
             top: 0;
             left: 0;
@@ -350,7 +354,7 @@
         .dash-content .boxes {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-evenly;
             flex-wrap: wrap;
         }
 
@@ -538,6 +542,52 @@
                 width: 100%;
             }
         }
+
+        .bouton{
+            width: 100%;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        
+        .modif{
+            width: 43%;
+            height: 50px;
+            background-color: #E7D1FC;
+            color: white;
+            border: 1px solid black;
+            border-radius: 4px;
+            
+        }
+
+        
+        
+        .sup{
+            width: 55%;
+            height: 50px;
+            background-color: #FFE6AC;
+            border: 1px solid black;
+            border-radius: 4px;
+        }
+
+        .bouton a {
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .ton{
+            width: 100%;
+            height: 100px;
+            display: flex;
+            flex-direction:row ;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        
+
     </style>
 </head>
 
@@ -555,18 +605,14 @@
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Dahsboard</span>
                     </a></li>
-                <!-- <li><a href="#">
-                        <i class="uil uil-files-landscapes"></i>
-                        <span class="link-name">Content</span>
-                    </a></li> -->
+                
+
+                    <!-- partie statistique Emanuella doit voir -->
                 <li><a href="#">
                         <i class="uil uil-chart"></i>
-                        <span class="link-name">Statistics</span>
+                        <span class="link-name">Statistics</span> 
                     </a></li>
-                <li><a href="#">
-                        <i class="uil uil-thumbs-up"></i>
-                        <span class="link-name">Like</span>
-                    </a></li>
+                
                 <li><a href="#">
                         <i class="uil uil-comments"></i>
                         <span class="link-name">Commentaire</span>
@@ -594,6 +640,7 @@
             </ul>
         </div>
     </nav>
+
     <section class="dashboard">
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
@@ -610,6 +657,7 @@
                     <i class="uil uil-tachometer-fast-alt"></i>
                     <span class="text">Dashboard</span>
                 </div>
+
                 <div class="boxes">
                     <!-- <div class="box box1">
                         <i class="uil uil-thumbs-up"></i>
@@ -617,10 +665,11 @@
                         <span class="number">50,120</span>
                     </div> -->
                     <div class="box box2">
-                        <i class="uil uil-comments"></i>
-                        <span class="text">Commentaire</span>
-                        <span class="number">{{nbr_user}}<</span>
+                        <i class="uil uil-comments"> </i>
+                        <span class="text"> Commentaire </span>
+                        <span class="number">{{nbr_user}}</span>
                     </div>
+                    
                     <div class="box box3">
                         <i class="uil uil-share"></i>
                         <span class="text">Nombre Connexion</span>
@@ -645,41 +694,45 @@
                     </div>
 
                     <div class="data email">
-                        <span class="data-title">Email</span>
+                        <span class="data-title">Prenoms</span>
                         {% for row in data1%}
                         <span class="data-list">{{row[2]}}</span>
-                        <!-- <span class="data-list">deepachand@gmail.com</span>
-                        <span class="data-list">prakashhai@gmail.com</span>
-                        <span class="data-list">manishachand@gmail.com</span>
-                        <span class="data-list">pratimashhai@gmail.com</span>
-                        <span class="data-list">manshahi@gmail.com</span>
-                        <span class="data-list">ganeshchand@gmail.com</span> -->
                         {%endfor%}
+                        <div>
+                           
+                        </div>
                     </div>
                     <div class="data joined">
-                        <span class="data-title">Date</span>
+                        <span class="data-title">Username</span>
                         {% for row in data1%}
                         <span class="data-list">{{row[3]}}</span>
                         {%endfor%}
+                     
                     </div>
 
                     <div class="data type">
-                        <span class="data-title">Telephone</span>
+                        <span class="data-title">Email</span>
                         {% for row in data1%}
                         <span class="data-list">{{row[4]}}</span>
                         {%endfor%}
+                        
                     </div>
 
-                    <!-- <div class="data status">
-                        <span class="data-title">Status</span>
-                        <span class="data-list">Liked</span>
-                        <span class="data-list">Liked</span>
-                        <span class="data-list">Liked</span>
-                        <span class="data-list">Liked</span>
-                        <span class="data-list">Liked</span>
-                        <span class="data-list">Liked</span>
-                        <span class="data-list">Liked</span>
-                    </div> -->
+                    <div>
+                        <span class="data-title">Action</span>
+                        <div class="bouton">
+                            {% for row in data1%}
+                            <div class="ton">
+                                <td>
+                                    <button class="modif"><a href="{{ url_for('form_modif_dash', prod=row.id)}}" >Modifier</a></button>
+                                    <button class="sup"><a onclick="return confirm('Voulez-vous supprimer?')" href="{{ url_for('sup_users', suppr=row.id)}}">Supprimer</a></button>
+                                </td>
+                            </div>
+                          
+                            {%endfor%}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

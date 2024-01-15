@@ -256,14 +256,7 @@ body{
                     <input type="submit" value="Se connecter">
                   </div>
                   <div class="text sign-up-text">vous n'avez pas de compte? <a href="{{url_for('inscription')}}">Créer un compte</a>
-                  </div></div>
-                  {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                  {% for message in messages %}
-                  <div class="alert-{{category}}" id="mes">{{message}}</div>
-                  {% endfor %}
-                  {% endif %}
-                  {% endwith %}
+                  </div>
 
             </form>
               </div></div></div></div>

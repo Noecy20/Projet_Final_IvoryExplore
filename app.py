@@ -1,5 +1,3 @@
-
-from flask import Flask,render_template, url_for, request, redirect, flash, session
 from flask import Flask, render_template, url_for, request, redirect, flash, session
 import pyodbc
 import re
@@ -32,7 +30,7 @@ app.config['SECRET_KEY'] ='clés_flash'
 #     Trusted_Connection=yes;"""
 connection_string = (
     "Driver={ODBC Driver 17 for SQL Server};"
-    "Server=DESKTOP-T61GK5V\SQLEXPRESS01;"
+    "Server=MTN-Academy\SQLEXPRESS;"
     "Database=Script_ivory;"
     "Trusted_Connection=yes"
 )
@@ -94,30 +92,74 @@ def upload_profile():
 
 # Profil utilisateur
 
-app.config['SQL_SERVER_CONNECTION_STRING'] = """
-    Driver={SQL Server};
-    Server=MTN-Academy\SQLEXPRESS;
-    Database=ivorydb;
-    Trusted_Connection=yes;"""
 
 
 
 #PREMIERE ROUTE ==> LA PREMIERE PAGE POUR LE USER
 @app.route('/')
 def index():
-    
     return render_template("index.html")
 
 # DEBUT DE LA PAGE dasbord
 # ROUTE ==> LA PAGE dasbord
+@app.route('/dashbord', methods = ['POST', 'GET'])
+def dash():
+#  if 'loggedin' in session:
+#     # if session['role'] != 'admin':
+#     #     return redirect(request.referrer)
+#     # else:
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+    cursor.execute("select  * from users")
+    # cursor.execute(""" SELECT * FROM Transfert """)
+    data = cursor.fetchall()
+    nbr_user=len(data)
+    conn.commit()
+    conn.close()
+    flash("votre utilisateur à été supprimé", 'succès')
 
-# @app.route('/dashbord')
-# def dash():
-#     return render_template("dashbord.html")
+    return render_template("dashbord.html", data1=data , nbr_user=nbr_user)
+# return redirect(url_for('connexion'))
 
-# @app.route('/dashbord')
-# def dash():
-#     return render_template("dashbord.html")
+
+
+# formulaire de modification du dashboard
+
+@app.route("/form_modif_dash.html/<int:prod>", methods=['POST', 'GET'])
+def form_modif_dash(prod ):
+
+    if request.method == 'POST':
+            Nom = request.form['nom_user']
+            Prenoms = request.form['prenom_user']
+            Username = request.form['username']
+            Email = request.form['email']
+            conn = pyodbc.connect(connection_string)
+            cur = conn.cursor()
+            cur.execute('''
+                        update users set nom_user=?, prenom_user=?, username=?, email=? where id=?''',
+                        (Nom, Prenoms, Username, Email, prod ))
+            conn.commit()
+            conn.close()
+            flash('utilisateur  modifié','succès')
+            return redirect(url_for("dash"))
+    prod = int(prod)
+    conn = pyodbc.connect(connection_string)
+    cur = conn.cursor()
+    cur.execute("select * from users where id=?", (prod,))
+    base = cur.fetchone()
+    return render_template("/form_modif_dash.html", mybase=base)
+
+
+#partie supression utilisateur dans le dashbord
+@app.route("/sup_users/<string:suppr>", methods=['POST','GET'])
+def sup_users(suppr):
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+    cursor.execute('DELETE from users where id=?', (suppr),)
+    conn.commit()
+    conn.close()
+    flash("votre produit à été supprimé", 'succès')
+    return redirect(url_for('dash'))
 
 
 @app.route('/Inscription', methods=["GET", "POST"])
@@ -180,23 +222,14 @@ def inscription():
 
 # DEBUT DE LA PAGE CONNEXION
 #ROUTE ==> LA PAGE CONNEXION
-# @app.route('/connexion',methods=["GET", "POST"])
 
 @app.route('/Connexion',methods=["GET", "POST"])
 def connexion():
-
-    #conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
-    #cursor = conn.cursor()
-    # cursor.execute("SELECT * FROM users where email=?",(email,))
-    #user = cursor.fetchone()
-    #session["user"]=user
-    
     if request.method == 'POST':
         email = request.form["email"]  # Utilisateur peut saisir l'e-mail ou le nom d'utilisateur
         passwords = request.form["passwords"]
         conn = pyodbc.connect(connection_string)
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         cursor.execute('SELECT * FROM users WHERE email = ? OR username = ?', (email, email))
         users = cursor.fetchone()
         if users:
@@ -207,9 +240,6 @@ def connexion():
                 session['loggedin'] = True
                 session['Id'] = users[0]
                 session['username'] = users[1]
-                session['role']=users[6]
-                print(session['role'])
-                return redirect(url_for('accueil'))
 
               # Utilisation du contexte 'with' pour la requête SELECT
                 with cursor.execute('SELECT * FROM nco WHERE id_user = ?', (session['Id'])) as result:
@@ -221,19 +251,15 @@ def connexion():
                 conn.close()
 
                 if compte == 1:
-                    return redirect(url_for('user_connect/preference'))
+                    return redirect(url_for('preference'))
                 else:
                     return redirect(url_for('accueil'))
             else:
                 flash("Mot de passe incorrect !", 'info')
-                return redirect(url_for('user_connect/connexion.html'))
+                return redirect(url_for('connexion'))
         else:
-            flash("Identifiant incorrect !", 'info')
-            return redirect(url_for('user_connect/connexion.html'))
-
-
-        flash("Identifiant incorrect !", 'info')
-        return redirect(url_for('user_connect/connexion'))
+          flash("Identifiant incorrect !", 'info')
+          return redirect(url_for('connexion'))
     
     return render_template("user_connect/connexion.html")
 # FIN DE LA PAGE CONNEXION
@@ -380,29 +406,25 @@ from flask import render_template
 
 @app.route('/Accueil')
 def accueil():
-
-
     if 'loggedin' in session:
         conn = pyodbc.connect(connection_string)
         try:
             with conn.cursor() as cursor:
-               
                 cursor.execute('SELECT interests FROM preference WHERE id_user = ?', (session['Id'],))
                 data = cursor.fetchone()
 
                 cursor.execute('SELECT * FROM users WHERE id = ?', (session['Id'],))
                 user_data = cursor.fetchone()
 
-
                 # Initialise la variable notes avec une liste vide en cas de non-respect de la première condition
                 notes = []
 
-                if any(keyword in data[0] for keyword in ["hotel class", "hotel chic"]):
+                if data and any(keyword in data[0] for keyword in ["hotel class", "hotel chic"]):
                     cursor.execute('SELECT TOP 4 * FROM hotel')
                     data_h = cursor.fetchall()
 
                     # Charger les données depuis le fichier CSV avec Pandas
-                    data_note = pd.read_csv('csv/NoteHot.csv',  sep=';')
+                    data_note = pd.read_csv('csv/NoteHot.csv', sep=';')
 
                     # Convertir la Series en une liste de dictionnaires
                     notes_list = [{"etablissement": etablissement, "note": note, "image": image_link} for etablissement, note, image_link in zip(data_note["Nom de l'etablissement"], data_note["Note"], data_note["liens"])]
@@ -410,7 +432,7 @@ def accueil():
                     # Mélanger la liste de manière aléatoire
                     random.shuffle(notes_list)
 
-                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10], user_data = user_data)
+                    return render_template("accueil.html", data_h=data_h, notes=notes_list[:10], user_data=user_data)
                 else:
                     print("Avant le rendu de template (condition else)")  # Ajoutez cette ligne de débogage
                     return render_template("accueil.html", data_h=None, notes=notes, user_data=user_data)
@@ -418,7 +440,7 @@ def accueil():
             conn.close()
     else:
         return redirect(url_for('connexion'))
-    
+
 
     #code de trie et d'affichage 
    
@@ -622,24 +644,6 @@ def note():
 
 
 
-
-#dashoard
-@app.route('/dashbord',methods = ['POST', 'GET'])
-def dashbord():
-    #  if 'loggedin' in session:
-    # if session['role'] != 'admin':
-    #     return redirect(request.referrer)
-    # else:
-    conn = pyodbc.connect(app.config['SQL_SERVER_CONNECTION_STRING'])
-    cursor = conn.cursor()
-    cursor.execute("select  * from users")
-    # cursor.execute(""" SELECT * FROM Transfert """)
-    data = cursor.fetchall()
-    nbr_user=len(data)
-    conn.commit()
-    conn.close()
-    return render_template("dashbord.html" , data1=data, nbr_user=nbr_user)
-    # return redirect(url_for('connexion'))
-
 if __name__ == "__main__":
     app.run(debug=True,port=3000)
+

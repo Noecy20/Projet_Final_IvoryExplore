@@ -19,7 +19,8 @@
 
   <div class="action">
     <div class="profile" onclick="menuToggle();">
-      <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" alt=""  id="photo">
+      <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" alt=""
+        id="photo">
     </div>
     <div class="menu">
       <h3>
@@ -29,7 +30,8 @@
       </h3>
 
       <div class="user-img">
-        <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" width="30%" id="photo">
+        <img src="{{ url_for('static', filename='uploads/images_profil_parent/' + user_data.profileImage)}}" width="30%"
+          id="photo">
         <input type="file" id="file" name="profileImage">
         <label for="file" id="uploadbtn"><i class="fa-solid fa-camera"></i></label>
       </div>
@@ -50,7 +52,7 @@
           <a href="{{ url_for('modif_preference') }}">Modifier Préférence</a>
           <br>
           <i class="fa-solid fa-circle-user"></i>
-          <a href="#">Modifier Mon Compte</a>
+          <a href="{{ url_for('Modif_compte') }}">Modifier Mon Compte</a>
         </li>
         <li>
           <h5>Contactez-nous</h5>
@@ -69,7 +71,7 @@
           <a href="{{ url_for('deconnexion') }}">Quitter/Se deconnecter</a>
           <br>
           <i class="fa-solid fa-trash-can"></i>
-          <a href="#">Supprimer</a>
+          <a href="{{ url_for('sup_compte') }}">Supprimer mon Compte</a>
         </li>
 
       </ul>

@@ -38,8 +38,11 @@ connection_string = (
 )
 
 
-# ? Configuration pour le stockage des images du parent et du répétiteur
-# ? Configuration pour le stockage des images du parent et du répétiteur
+
+######## PROFIL UTILISATEUR ############## 
+
+## Mise à jour photo de profil ##
+
 UPLOAD_FOLDER_PARENT = 'static/uploads/images_profil_parent'
 app.config['UPLOAD_FOLDER_PARENT'] = UPLOAD_FOLDER_PARENT
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -48,11 +51,6 @@ app.config['SESSION_TYPE'] = 'filesystem'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-#UPLOAD_FOLDER_PARENT = 'static/uploads/images_profil_parent'
-#app.config['UPLOAD_FOLDER_PARENT'] = UPLOAD_FOLDER_PARENT
-
-# Route pour la modification du profil via une requête AJAX
 @app.route('/upload_profile', methods=['POST'])
 def upload_profile():
     if 'profileImage' not in request.files:
@@ -90,19 +88,141 @@ def upload_profile():
             return 'Erreur id de l\'utilisateur'
 
     return 'Erreur lors du téléchargement du fichier'
+## Fin Mise à jour photo de profil ##
+
+## Modification du compte ##
+
+@app.route("/Modif_compte", methods=["GET", "POST"])
+def Modif_compte():
+    if request.method == "GET":
+        # Récupérer l'ID de l'utilisateur connecté (assurez-vous d'avoir une session utilisateur)
+        user_id = session.get('Id')  # Implémentez la fonction get_user_id selon votre logique d'authentification
+
+        # Exécuter une requête SQL pour récupérer les données de l'utilisateur
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", user_id)
+        user_data = cursor.fetchone()
+
+        # Passer les données à la page HTML
+        return render_template("user_connect/modif_compte.html", user_data=user_data)
+    
+    elif request.method == "POST":
+        # Récupérer les données du formulaire
+        user_id = request.form.get("id")
+        prenom = request.form.get("prenom")
+        nom = request.form.get("nom")
+        email = request.form.get("mail")
+        username = request.form.get("username")
+
+        # Exécuter une requête SQL pour mettre à jour les données de l'utilisateur
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute("UPDATE users SET prenom_user=?, nom_user=?, email=?, username=? WHERE id=?", 
+                       prenom, nom, email, username, user_id)
+        
+        # Valider la transaction et fermer la connexion
+        conn.commit()
+        conn.close()
+
+        # Rediriger vers la page d'accueil ou une autre page de confirmation
+        return redirect(url_for("accueil"))
 
 
-# Profil utilisateur
+@app.route("/Modif_mot_de_passe", methods=["POST"])
+def Modif_mot_de_passe():
+    # Récupérer l'ID de l'utilisateur connecté (assurez-vous d'avoir une session utilisateur)
+    user_id = session.get('Id')  # Implémentez la fonction get_user_id selon votre logique d'authentification
 
-app.config['SQL_SERVER_CONNECTION_STRING'] = """
-    Driver={SQL Server};
-    Server=MTN-Academy\SQLEXPRESS;
-    Database=ivorydb;
-    Trusted_Connection=yes;"""
+    # Récupérer les données du formulaire
+    old_password = request.form.get("mdp")
+    new_password = request.form.get("new")
+    confirm_password = request.form.get("confirm")
+
+    # Exécuter une requête SQL pour récupérer le mot de passe actuel de l'utilisateur
+    conn = pyodbc.connect(connection_string)
+    cursor = conn.cursor()
+    cursor.execute("SELECT passwords FROM users WHERE id = ?", user_id)
+    current_password = cursor.fetchone()[0]
+
+    # Vérifier si l'ancien mot de passe saisi correspond au mot de passe actuel
+    if not check_password_hash(current_password, old_password):
+        flash("L'ancien mot de passe est incorrect", "error")
+        return redirect(url_for("Modif_compte"))
+
+    # Vérifier si les nouveaux mots de passe correspondent
+    if new_password != confirm_password:
+        flash("Les nouveaux mots de passe ne correspondent pas", "error")
+        return redirect(url_for("Modif_compte"))
 
 
 
-#PREMIERE ROUTE ==> LA PREMIERE PAGE POUR LE USER
+    # Hasher le nouveau mot de passe
+    hashed_password = generate_password_hash(new_password)
+
+    # Exécuter une requête SQL pour mettre à jour le mot de passe de l'utilisateur
+    cursor.execute("UPDATE users SET passwords = ? WHERE id = ?", hashed_password, user_id)
+
+    # Valider la transaction et fermer la connexion
+    conn.commit()
+    conn.close()
+
+    flash("Mot de passe mis à jour avec succès", "success")
+    return redirect(url_for("Modif_compte"))
+
+ ## Fin Modification du compte ##
+
+## Debut suppression du compte ##
+@app.route("/sup_compte", methods=["GET", "POST"])
+def sup_compte():
+    if request.method == "GET":
+        # Vérifiez si l'utilisateur est connecté
+        user_id = session.get('Id')  # Remplacez 'Id' par la clé appropriée utilisée dans votre session
+
+        if user_id is None:
+            # Rediriger l'utilisateur vers la page de connexion s'il n'est pas connecté
+            return redirect(url_for("login"))
+
+        # Exécuter une requête SQL pour récupérer les données de l'utilisateur
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", user_id)
+        user_data = cursor.fetchone()
+
+        # Fermer la connexion
+        conn.close()
+
+        # Afficher la page de suppression de compte avec les données de l'utilisateur
+        return render_template("user_connect/sup_compte.html", user_data=user_data)
+
+    elif request.method == "POST":
+        # Récupérer l'ID de l'utilisateur connecté
+        user_id = session.get('Id')  # Remplacez 'Id' par la clé appropriée utilisée dans votre session
+
+        # Exécuter une requête SQL pour supprimer le compte de l'utilisateur
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM users WHERE id = ?", user_id)
+
+        # Valider la transaction et fermer la connexion
+        conn.commit()
+        conn.close()
+
+        # Déconnecter l'utilisateur (effacer la session)
+        session.clear()
+
+        # Afficher un message de confirmation
+        flash("Votre compte a été supprimé avec succès.", "success")
+
+        # Rediriger l'utilisateur vers une page de confirmation ou d'accueil
+        return redirect(url_for("accueil"))
+
+## Fin suppression du compte ##
+
+######## FIN PROFIL UTILISATEUR ############## 
+
+
+#PREMIERE ROUTE ==> LA PREMIERE PAGE ACCUEIL POUR TOUT LE MONDE
 @app.route('/')
 def index():
     
@@ -295,6 +415,10 @@ def réinitialiser_traitement(user_id):
 #FIN MOT DE PASSE OUBLIE ET RECUPERATION
 
 
+
+#debut de la deconnexion
+from flask import redirect, url_for, flash, session
+
 #debut de la deconnexion
 @app.route('/Deconnexion')
 def deconnexion():
@@ -302,11 +426,35 @@ def deconnexion():
         session.pop('loggedin', None)
         session.pop('Id', None)
         session.pop('username', None)
-        flash('You have been successfully logged out', 'success')
+        flash('Vous avez été déconnecté avec succès', 'success')
     else:
-        flash('You are not logged in', 'warning')
+        flash('Vous n’êtes pas connecté', 'warning')
 
     return redirect(url_for('index'))
+
+
+# @app.route("/deconnexion", methods=["GET", "POST"])
+# def deconnexion():
+#     if request.method == "POST":
+#         # Effacer la session (déconnexion)
+#         user_id = session.get('Id')
+#         session.clear()
+#         # Exécuter une requête SQL pour récupérer les données de l'utilisateur
+#         conn = pyodbc.connect(connection_string)
+#         cursor = conn.cursor()
+#         cursor.execute("SELECT * FROM users WHERE id = ?", user_id)
+#         user_data = cursor.fetchone()
+
+#         # Fermer la connexion
+#         conn.close()
+#         flash("Vous avez été déconnecté avec succès.", "success")
+#         return redirect(url_for("index"))
+
+    
+#     # Afficher la page de suppression de compte avec les données de l'utilisateur
+#     return render_template("user_connect/sup_compte.html", user_data=user_data)
+
+
 #fin deconnexion
 
 # DEBUT DE LA PAGE PREFERENCE
@@ -346,10 +494,36 @@ def preference():
     else:
         return redirect(url_for('connexion'))
 
-
-
- 
 # FIN DE LA PAGE PREFERENCE
+
+# @app.route('/modif_preference', methods=['POST','GET'])
+# def modif_preference():
+#     # code de trie et d'affichage
+#     if 'loggedin' in session:
+
+#         if request.method == 'POST':
+#             checked_options = request.form.getlist("option[]")
+#             conn = pyodbc.connect(connection_string)
+#             cursor = conn.cursor()
+#             interests = ",".join(checked_options)
+#             cursor.execute('''
+#                 UPDATE preference SET interests = ? 
+#                 WHERE id_user = ?
+#             ''', (interests, session['Id']))
+#             conn.commit()
+#             return redirect(url_for('accueil'))
+
+#         # Récupérer les données de l'utilisateur pour les transmettre à la page
+#         conn = pyodbc.connect(connection_string)
+#         cursor = conn.cursor()
+#         cursor.execute("SELECT * FROM users WHERE id = ?", session['Id'])
+#         user_data = cursor.fetchone()
+#         conn.close()
+
+#         return render_template("user_connect/modif_pref.html", user_data=user_data)
+#     else:
+#         return redirect(url_for('connexion'))
+
 @app.route('/modif_preference', methods=['POST','GET'])
 def modif_preference():
     #code de trie et d'affichage 
@@ -366,8 +540,14 @@ def modif_preference():
                 ''', (interests, session['Id']))
                     conn.commit()
                     return redirect(url_for('accueil'))
+        # Récupérer les données de l'utilisateur
+        conn = pyodbc.connect(connection_string)
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", session['Id'])
+        user_data = cursor.fetchone()
+        conn.close()
                     
-        return render_template("user_connect/modif_pref.html")      
+        return render_template("user_connect/modif_pref.html", user_data=user_data)      
     else:
         return redirect(url_for('connexion'))
     
@@ -376,8 +556,6 @@ def modif_preference():
 # DEBUT DE LA PAGE ACCCUEIL
 #ROUTE ==> LA PAGE ACCUEIL
      
-from flask import render_template
-
 @app.route('/Accueil')
 def accueil():
 
@@ -397,7 +575,7 @@ def accueil():
                 # Initialise la variable notes avec une liste vide en cas de non-respect de la première condition
                 notes = []
 
-                if any(keyword in data[0] for keyword in ["hotel class", "hotel chic"]):
+                if any(keyword in data[0] for keyword in ["Hotel class", "Hotel chic"]):
                     cursor.execute('SELECT TOP 4 * FROM hotel')
                     data_h = cursor.fetchall()
 
@@ -624,6 +802,11 @@ def note():
 
 
 #dashoard
+# app.config['SQL_SERVER_CONNECTION_STRING'] = """
+#     Driver={SQL Server};
+#     Server=MTN-Academy\SQLEXPRESS;
+#     Database=ivorydb;
+#     Trusted_Connection=yes;"""
 @app.route('/dashbord',methods = ['POST', 'GET'])
 def dashbord():
     #  if 'loggedin' in session:

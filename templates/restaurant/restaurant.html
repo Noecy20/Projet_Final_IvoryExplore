@@ -51,17 +51,19 @@
     <div class="div-card-filter">
     <div class="card-list_restaurant resto">
         {% for row in data %}
-        <div class="card-item_restaurant">
+        <div class="card-item_restaurant" data-nom="{{ row[4] }}" data-lieu="{{ row[2] }}" data-contact="{{ row[5] }}">
             <ul class="images">
-                <li class="img"><img src="./static/images/image_Restaurant/pexels-lisa-fotios-776538.jpg" alt="img">
-                </li>
+                <li class="img"><img src="./static/images/image_Restaurant/pexels-lisa-fotios-776538.jpg" alt="img"></li>
             </ul>
-            <span class="nomResto1">{{row.4}}</span>
-            <h4>{{row[3]}}</h4>
-
+            <span class="nomResto1">{{ row[4] }}</span>
+            <h4>{{ row[3] }}</h4>
         </div>
         {% endfor %}
+<<<<<<< Updated upstream
     </div> 
+=======
+    </div>
+>>>>>>> Stashed changes
 
     <!-- MY FILTER -->
     <!-- Contenu à faire apparaître depuis la droite -->
@@ -130,5 +132,36 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var lightbox = document.querySelector('.lightbox');
+        var previewImg = lightbox.querySelector('.preview-img img');
+        var infoResto = lightbox.querySelector('.info_resto');
+        var closeButton = lightbox.querySelector('#close-icon');
+
+        var cardItems = document.querySelectorAll('.card-item_restaurant');
+        cardItems.forEach(function (cardItem) {
+            cardItem.addEventListener('click', function () {
+                var nom = cardItem.getAttribute('data-nom');
+                var lieu = cardItem.getAttribute('data-lieu');
+                var contact = cardItem.getAttribute('data-contact');
+
+                previewImg.src = "";  // Ajoutez le chemin de l'image
+                infoResto.innerHTML = `
+                <div>Nom du restaurant: ${nom}</div>
+                <div>Lieu du restaurant: ${lieu}</div>
+                <div>Contact du restaurant: ${contact}</div>
+            `;
+                lightbox.classList.add('active');
+            });
+        });
+
+        closeButton.addEventListener('click', function () {
+            lightbox.classList.remove('active');
+        });
+    });
+</script>
+
 
 {%endblock centre%}

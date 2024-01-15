@@ -1,0 +1,24 @@
+{% extends "./base.html" %}
+
+{% block centre %}
+<main class="section_connexion_page_container">
+    <div class="section_connexion_page_container1">
+        <form method="post" action="{{ url_for('deconnexion') }}" class="tableau">
+            <div>
+                <h2>Se déconnecter Compte</h2>
+            </div>
+            <div class="formu1">
+                <p>Voulez-vous vous déconnecter ?</p>
+            </div>
+            <div class="boutton">
+                <div class="btn1">
+                    <a href="{{ url_for('index') }}">Retour</a>
+                </div>
+                <div class="btn2">
+                    <button type="submit" name="confirm" value="yes">Valider</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock centre %}

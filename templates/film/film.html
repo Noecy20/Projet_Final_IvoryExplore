@@ -46,16 +46,14 @@
 <div class="div-card-filter">
     <!-- Card List Restaurant -->
     <div class="card-list_restaurant resto">
-        <div class="card-item_restaurant">
+        <div class="card-item_restaurant" data-titre="Titre du film 1" data-auteur="Auteur 1" data-annee="2022">
             <ul class="images">
                 <li class="img"><img src="./static/images/image_Film/WhatsApp Image 2023-12-12 ├á 14.29.37_ae36b798.jpg"
-                        alt="img">
-                </li>
+                        alt="img"></li>
             </ul>
-            <span class="nomResto1">Titre du film</span>
+            <span class="nomResto1">Titre du film 1</span>
             <span class="nomResto1">Genre</span>
-            <h4>A "developer" codes software and websites.An "editor" ensures content quality and accuracy</h4>
-
+            <h4>Description du film 1</h4>
         </div>
         <div class="card-item_restaurant">
             <ul class="images">
@@ -161,25 +159,55 @@
     <div class="wrapper">
         <header>
             <div class="details">
-                <i class="fa-solid fa-utensils"></i>
+                <!-- Remplacez l'icône de fourchette et couteau par l'icône de film -->
+                <i class="fa-solid fa-film"></i>
                 <span>Titre du film</span>
             </div>
             <div class="buttons">
-                <i class="fa-solid fa-xmark " id="close-icon"></i>
+                <i class="fa-solid fa-xmark" id="close-icon"></i>
             </div>
         </header>
-        <!-- ici que je  dois modifier-->
+        <!-- ici que je dois modifier -->
         <div class="preview-img">
-            <div class="img">
-                <img src="" alt="preview-img">
-            </div>
-            <div class="info_resto">
+            <div class="img"><img src="" alt="preview-img"></div>
+            <div class="info_film">
                 <div>Titre du film</div>
-                <div>Auteurt</div>
+                <div>Réalisateur du film</div>
                 <div>Année de sortie</div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var lightbox = document.querySelector('.lightbox');
+        var previewImg = lightbox.querySelector('.preview-img img');
+        var infoResto = lightbox.querySelector('.info_resto');
+        var closeButton = lightbox.querySelector('#close-icon');
+
+        var cardItems = document.querySelectorAll('.card-item_restaurant');
+        cardItems.forEach(function (cardItem) {
+            cardItem.addEventListener('click', function () {
+                var titre = cardItem.getAttribute('data-titre');
+                var auteur = cardItem.getAttribute('data-auteur');
+                var annee = cardItem.getAttribute('data-annee');
+
+                previewImg.src = "";  // Ajoutez le chemin de l'image
+                infoResto.innerHTML = `
+                <div>Titre du film: ${titre}</div>
+                <div>Auteur: ${auteur}</div>
+                <div>Année de sortie: ${annee}</div>
+            `;
+                lightbox.classList.add('active');
+            });
+        });
+
+        closeButton.addEventListener('click', function () {
+            lightbox.classList.remove('active');
+        });
+    });
+</script>
+
 
 {%endblock centre%}

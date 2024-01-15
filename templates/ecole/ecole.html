@@ -81,15 +81,13 @@
 </form>
 <!-- MY FILTER -->
 <div class="card-list-ecole">
-    <div class="card-item-ecole">
-        <ul class="images-ecole ">
+    <div class="card-item-ecole" data-nom="UNIVERSITE FHB DE COCODY" data-contenu="CONTENU ECOLES">
+        <ul class="images-ecole">
             <li class="img"><img src="/static/images/image_Ecole/Image1.png" alt="img"></li>
         </ul>
         <span class="developer">UNIVERSITE FHB DE COCODY</span>
         <h3><B>CONTENU ECOLES</B></h3>
-        <div>
-
-        </div>
+        <div></div>
     </div>
     <div class="card-item-ecole">
         <ul class="images-ecole">
@@ -207,12 +205,56 @@
 <div class="lightbox">
     <div class="wrapper">
         <header>
-
-            <div class="buttons"><i class="fa-solid fa-xmark " id="close-icon"></i></div>
+            <div class="details">
+                <!-- Remplacez l'icône de fourchette et couteau par l'icône de graduation cap -->
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>Nom de l'école</span>
+            </div>
+            <div class="buttons">
+                <i class="fa-solid fa-xmark" id="close-icon"></i>
+            </div>
         </header>
+        <!-- ici que je dois modifier -->
         <div class="preview-img">
             <div class="img"><img src="" alt="preview-img"></div>
+            <div class="info_ecole">
+                <div>Nom de l'école</div>
+                <div>Lieu de l'école</div>
+                <div>Contact de l'école</div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var lightbox = document.querySelector('.lightbox');
+        var previewImg = lightbox.querySelector('.preview-img img');
+        var infoEcole = lightbox.querySelector('.info_ecole');
+        var closeButton = lightbox.querySelector('#close-icon');
+
+        var cardItemsEcole = document.querySelectorAll('.card-item-ecole');
+        cardItemsEcole.forEach(function (cardItemEcole) {
+            cardItemEcole.addEventListener('click', function () {
+                var nomEcole = cardItemEcole.getAttribute('data-nom');
+                var contenuEcole = cardItemEcole.getAttribute('data-contenu');
+
+                // Ajoutez le chemin de l'image ici
+                previewImg.src = "";
+                infoEcole.innerHTML = `
+                    <div>Nom de l'école: ${nomEcole}</div>
+                    <div>Contenu de l'école: ${contenuEcole}</div>
+                `;
+                lightbox.classList.add('active');
+            });
+        });
+
+        closeButton.addEventListener('click', function () {
+            lightbox.classList.remove('active');
+        });
+    });
+</script>
+
+
+
 {%endblock centre%}

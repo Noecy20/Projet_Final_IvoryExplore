@@ -1,0 +1,24 @@
+{% extends "./base.html" %}
+
+{% block centre %}
+<main class="section_connexion_page_container">
+    <div class="section_connexion_page_container1">
+        <form method="post" action="{{ url_for('sup_compte') }}" class="tableau">
+            <div>
+                <h2>Suppression de Compte</h2>
+            </div>
+            <div class="formu1">
+                <p>Vous êtes sur le point de supprimer votre compte. Êtes-vous sûr de vouloir continuer ?</p>
+            </div>
+            <div class="boutton">
+                <div class="btn1">
+                    <a href="{{ url_for('accueil') }}">Retour</a>
+                </div>
+                <div class="btn2">
+                    <button type="submit">Valider</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock centre %}
